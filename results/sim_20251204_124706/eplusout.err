@@ -1,0 +1,12 @@
+Program Version,EnergyPlus, Version 25.1.0-68a4a7c774, YMD=2025.12.04 12:47,
+   ** Severe  ** <root>[Coil:Cooling:DX:SingleSpeed][AC1_Cooling_Coil][2023_rated_evaporator_fan_power_per_volume_flow_rate] - Value type "string" for input "AC1_Fan_Outlet_Node" not permitted by 'type' constraint.
+   ** Warning ** Version: in IDF="23.2" not the same as expected="25.1"
+   **  Fatal  ** Errors occurred on processing input file. Preceding condition(s) cause termination.
+   ...Summary of Errors that led to program termination:
+   ..... Reference severe error count=1
+   ..... Last severe error=<root>[Coil:Cooling:DX:SingleSpeed][AC1_Cooling_Coil][2023_rated_evaporator_fan_power_per_volume_flow_rate] - Value type "string" for input "AC1_Fan_Outlet_Node" not permitted by 'type' constraint.
+   ************* Warning:  Node connection errors not checked - most system input has not been read (see previous warning).
+   ************* Fatal error -- final processing.  Program exited before simulations began.  See previous error messages.
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Terminated--Fatal Error Detected. 1 Warning; 1 Severe Errors; Elapsed Time=00hr 00min  0.04sec
