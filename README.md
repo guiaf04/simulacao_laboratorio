@@ -6,10 +6,19 @@
 Este projeto contém os arquivos e scripts para realizar a simulação térmica do **Laboratório de Arquitetura** da UFC Quixadá usando EnergyPlus e OpenStudio.
 
 ### Características do Laboratório:
-- 🏢 **2 ar-condicionados** na parede do fundo
-- 🪟 **2 janelas grandes** na parede oposta à porta
+- 📐 **Dimensões:** 7.06m × 9.39m × 2.68m (66.29 m²)
+- 🧭 **Orientação:** 342° do Norte
+- ❄️ **2 ar-condicionados Split** 30.000 BTU/h cada (parede lateral)
+- 🪟 **4 janelas de correr** 1.55m × 1.17m (parede lateral)
+- 🚪 **1 porta dupla** 1.20m × 2.10m (madeira maciça com visor)
+- 💡 **6 luminárias** LED tubular T5 (120W total)
 - 📝 **1 lousa** na parede adjacente à porta
-- 📍 **Localização**: Fortaleza, Ceará, Brasil
+- 📍 **Clima:** Fortaleza, Ceará, Brasil
+
+### Materiais (conforme Memorial Descritivo - Edital 90009/2024):
+- **Paredes:** Bloco cerâmico furado 9×19×19cm + argamassa 2.5cm
+- **Cobertura:** Telha galvalume + isolamento PU 30mm + laje nervurada
+- **Janelas:** Alumínio de correr + vidro simples 4mm
 
 ---
 
@@ -18,74 +27,41 @@ Este projeto contém os arquivos e scripts para realizar a simulação térmica 
 ```
 simulacao_laboratorio/
 ├── models/                                  # Modelos de simulação
-│   ├── laboratorio_arquitetura.idf          # ✅ Versão 25.1 (FUNCIONANDO)
-│   ├── laboratorio_arquitetura_v24.1.idf    # ⚠️ Versão 24.1 (OpenStudio)
+│   ├── laboratorio_arquitetura.idf          # ✅ Modelo principal (EnergyPlus 25.1)
 │   └── laboratorio_arquitetura_backup.idf   # 📦 Backup da versão original
 ├── weather/                                 # Arquivos de clima
 │   ├── README_CLIMA.md                      # Instruções para obter arquivo EPW
 │   └── Fortaleza.epw                        # Arquivo de clima (baixar)
 ├── scripts/                                 # Scripts auxiliares
 │   ├── baixar_clima_fortaleza.py            # Baixa arquivo EPW
-│   ├── executar_simulacao.py                # ✅ Executa simulação v25.1
-│   ├── executar_simulacao_v241.py           # Executa simulação v24.1
+│   ├── executar_simulacao.py                # Executa simulação EnergyPlus
 │   └── analisar_resultados.py               # Analisa e gera gráficos
 ├── results/                                 # Resultados das simulações
-│   ├── sim_YYYYMMDD_HHMMSS/                 # Simulações v25.1
-│   └── sim_v241_YYYYMMDD_HHMMSS/            # Simulações v24.1
+│   └── sim_YYYYMMDD_HHMMSS/                 # Pasta por simulação
 ├── README.md                                # Este arquivo
-├── DADOS_NECESSARIOS.md                     # Checklist de dados a coletar
-├── CORRECOES_APLICADAS.md                   # Histórico de correções
-└── VERSAO_24.1_NOTAS.md                     # Notas sobre versão 24.1
+├── DADOS_NECESSARIOS.md                     # Checklist de dados (template)
+├── DADOS_COLETADOS.md                       # ✅ Dados reais coletados
+└── CORRECOES_APLICADAS.md                   # Histórico de correções
 ```
-
-## 🔢 Versões Disponíveis
-
-### ✅ Versão 25.1 (Recomendada - Funcionando)
-- **Arquivo:** `models/laboratorio_arquitetura.idf`
-- **EnergyPlus:** 25.1.0
-- **Status:** Totalmente funcional
-- **Uso:** `python3 scripts/executar_simulacao.py`
-
-### ⚠️ Versão 24.1 (OpenStudio)
-- **Arquivo:** `models/laboratorio_arquitetura_v24.1.idf`
-- **EnergyPlus:** 24.1.0 (incluído no OpenStudio 3.8.0)
-- **Status:** Necessita importação no OpenStudio para conversão automática
-- **Uso:** Importar no OpenStudio Application
-- **Detalhes:** Ver `VERSAO_24.1_NOTAS.md`
 
 ---
 
 ## 🚀 Como Executar a Simulação
 
-### Método 1: EnergyPlus 25.1 Standalone (Recomendado)
-
-#### Passo 1: Baixar Arquivo de Clima
-
-O arquivo de clima (EPW) contém dados meteorológicos de Fortaleza.
+### Passo 1: Baixar Arquivo de Clima
 
 ```bash
 cd "/home/guilherme/UFC/Instrumentação/EnergyPlus/simulacao_laboratorio"
 python3 scripts/baixar_clima_fortaleza.py
 ```
 
-**Alternativa manual:**
-1. Acesse: https://energyplus.net/weather
-2. Busque por "Fortaleza" ou "Brazil"
-3. Baixe o arquivo `BRA_CE_Fortaleza.838990_INMET.epw`
-4. Salve em `weather/Fortaleza.epw`
-
-#### Passo 2: Executar Simulação
+### Passo 2: Executar Simulação
 
 ```bash
 python3 scripts/executar_simulacao.py
 ```
 
-Este comando irá:
-- ✅ Verificar se todos os arquivos necessários existem
-- ✅ Executar o EnergyPlus com os parâmetros corretos
-- ✅ Salvar os resultados em `results/sim_YYYYMMDD_HHMMSS/`
-
-#### Passo 3: Analisar Resultados
+### Passo 3: Analisar Resultados
 
 ```bash
 # Instalar dependências (apenas primeira vez)
@@ -95,168 +71,94 @@ pip install pandas matplotlib
 python3 scripts/analisar_resultados.py
 ```
 
-Este comando irá:
-- 📊 Gerar gráficos de temperatura
-- ⚡ Gerar gráficos de consumo de energia
-- 📈 Calcular estatísticas resumidas
-- 💾 Salvar visualizações em `results/sim_*/graficos/`
+### Passo 4: Visualizar no OpenStudio (Opcional)
 
-#### Passo 4: Visualizar Relatório HTML
+Para visualização 3D e edição gráfica:
 
 ```bash
-# No Linux
+# Abrir no OpenStudio Application
+openstudio models/laboratorio_arquitetura.idf
+```
+
+### Passo 5: Visualizar Relatório HTML
+
+```bash
 xdg-open results/sim_*/eplustbl.htm
-
-# Ou navegue manualmente até o arquivo e abra no navegador
 ```
 
 ---
 
-### Método 2: OpenStudio Application (Interface Gráfica)
+## 📊 Dados do Modelo
 
-O OpenStudio fornece uma interface gráfica mais amigável para criar e editar modelos.
+Os dados do modelo foram coletados in loco e do Memorial Descritivo do Bloco Didático 5 (Edital 90009/2024).
 
-#### Passo 1: Importar o Modelo IDF
+### ✅ Dados Já Configurados no Modelo
 
-```bash
-# Abrir o OpenStudio
-openstudio
-```
+| Parâmetro | Valor |
+|-----------|-------|
+| Dimensões | 7.06m × 9.39m × 2.68m |
+| Área | 66.29 m² |
+| Orientação | 342° do Norte |
+| Janelas | 4× (1.55m × 1.17m) |
+| Porta | 1.20m × 2.10m |
+| Iluminação | 120W (6 luminárias LED) |
+| Parede | Bloco cerâmico 9cm + argamassa |
+| Vidro | Simples 4mm |
+| Isolamento teto | PU 30mm |
 
-Ou procure "OpenStudio" no menu de aplicativos.
+### ⚠️ Dados Pendentes de Confirmação
 
-#### Passo 2: Importar o Arquivo IDF
+Consulte [`DADOS_COLETADOS.md`](DADOS_COLETADOS.md) para lista completa.
 
-1. No OpenStudio: **File → Import → IDF File**
-2. Selecione: `models/laboratorio_arquitetura.idf`
-3. O OpenStudio converterá automaticamente para a versão 24.1
-4. Salve como arquivo OSM: **File → Save As...**
-
-#### Passo 3: Editar no OpenStudio (Opcional)
-
-- **Geometry:** Ver e editar a geometria 3D do laboratório
-- **Constructions:** Modificar materiais de paredes, janelas, etc.
-- **Loads:** Ajustar ocupação, equipamentos, iluminação
-- **HVAC Systems:** Configurar sistemas de climatização
-- **Output Variables:** Escolher quais dados exportar
-
-#### Passo 4: Executar Simulação no OpenStudio
-
-1. **Run Simulation** (botão verde ▶️)
-2. Aguarde a conclusão
-3. Visualize resultados na aba **Results**
-
-#### Passo 5: Visualizar Resultados
-
-- **Results Summary:** Relatórios automáticos
-- **DView:** Gráficos interativos de dados horários
-- **Reports:** Relatórios HTML detalhados
+- [ ] Altura exata do peitoril das janelas
+- [ ] Posição dos ar-condicionados na parede
+- [ ] Temperatura do termostato
+- [ ] Ocupação típica (número de pessoas)
+- [ ] Potência exata das lâmpadas (10W ou 20W)
 
 ---
 
-## 📊 Dados Necessários para Ajustar o Modelo
+## 🔧 Como Ajustar o Modelo
 
-### 🔧 **DADOS CRÍTICOS - Precisam ser Atualizados**
+### Editar Dimensões
 
-Consulte a planta do laboratório e atualize estes valores no arquivo `models/laboratorio_arquitetura.idf`:
-
-#### 1. **Dimensões do Laboratório**
-Atualmente configurado como: **10m × 8m × 3m** (comprimento × largura × altura)
+No arquivo `models/laboratorio_arquitetura.idf`, localize:
 
 ```
-Localização no arquivo IDF: Seção "ZONE" e coordenadas das superfícies
+Zone,
+    Laboratorio_Zone,        !- Name
+    ...
+    2.68,                    !- Ceiling Height {m}
+    177.66;                  !- Volume {m3}
 ```
 
-**Como medir:**
-- Comprimento (X): Dimensão da parede com porta à parede oposta
-- Largura (Y): Dimensão entre as paredes laterais
-- Altura (Z): Pé-direito do laboratório
+E as superfícies na seção `BuildingSurface:Detailed`.
 
-#### 2. **Posição e Tamanho das Janelas**
-Atualmente: 2 janelas de 2.5m × 2.0m (largura × altura)
+### Editar Materiais
 
-```
-Localização no arquivo IDF: Seção "FenestrationSurface:Detailed"
-Objetos: Window_1 e Window_2
-```
+Localize a seção `Material` e `Construction` para ajustar:
+- Espessuras
+- Condutividade térmica
+- Densidade
 
-**Dados necessários:**
-- Largura de cada janela
-- Altura de cada janela
-- Posição na parede (distância das extremidades)
-- Altura do peitoril (distância do chão)
+### Editar Cargas Internas
 
-#### 3. **Especificações dos Ar-Condicionados**
-Atualmente: Capacidade em "autosize" (dimensionamento automático)
+Na seção `People`, `Lights`, `ElectricEquipment`:
+- Número de pessoas
+- Potência de iluminação (W/m²)
+- Potência de equipamentos
 
-```
-Localização no arquivo IDF: Seção "ZoneHVAC:WindowAirConditioner"
-Objetos: AC_Unit_1 e AC_Unit_2
-```
+### Editar HVAC
 
-**Dados necessários:**
-- Marca e modelo dos ar-condicionados
-- Capacidade de refrigeração (BTU/h ou kW)
-- Eficiência energética (COP ou EER)
-- Vazão de ar (m³/s ou CFM)
-- Posição exata na parede
-
-#### 4. **Orientação do Edifício**
-Atualmente: Norte = 0° (sem rotação)
-
-```
-Localização no arquivo IDF: Seção "Building"
-Campo: North Axis
-```
-
-**Dados necessários:**
-- Ângulo de rotação em relação ao Norte geográfico
-- Use uma bússola ou Google Earth para determinar
-
-#### 5. **Materiais de Construção**
-Atualmente: Valores genéricos
-
-```
-Localização no arquivo IDF: Seção "Material" e "Construction"
-```
-
-**Dados necessários:**
-- **Paredes:** Tipo de alvenaria (tijolo cerâmico, bloco de concreto, etc.)
-- **Piso:** Material e espessura
-- **Teto/Cobertura:** Tipo de laje, isolamento
-- **Janelas:** Tipo de vidro (simples, duplo, baixo-e, etc.)
-- **Porta:** Material (madeira, metal, vidro)
-
-#### 6. **Cargas Internas**
-Atualmente: Valores estimados
-
-```
-Localização no arquivo IDF: Seções "People", "Lights", "ElectricEquipment"
-```
-
-**Dados necessários:**
-- **Ocupação:** Número típico de pessoas no laboratório
-- **Iluminação:** Potência total das lâmpadas (W) ou densidade (W/m²)
-- **Equipamentos:** Computadores, projetores, etc. (W total)
-- **Horários de uso:** Período de funcionamento do laboratório
-
-#### 7. **Sistema de Ventilação**
-Atualmente: Taxa de infiltração genérica
-
-```
-Localização no arquivo IDF: Seção "ZoneInfiltration:DesignFlowRate"
-```
-
-**Dados necessários:**
-- Existe ventilação natural? (janelas abertas)
-- Existe ventilação mecânica?
-- Taxa de renovação de ar desejada
+Na seção `ZoneHVAC:WindowAirConditioner`:
+- Capacidade de refrigeração (autosize ou valor em W)
+- Vazão de ar
 
 ---
 
 ## 📝 Como Editar o Arquivo IDF
 
-### Opção 1: Editor de Texto (Para usuários avançados)
+### Opção 1: Editor de Texto
 
 ```bash
 code models/laboratorio_arquitetura.idf
@@ -264,38 +166,20 @@ code models/laboratorio_arquitetura.idf
 nano models/laboratorio_arquitetura.idf
 ```
 
-**Busque por comentários "*** NOTA:" que indicam valores que precisam ser ajustados.**
+### Opção 2: OpenStudio (Recomendado)
 
-### Opção 2: IDF Editor (Recomendado)
-
-O IDF Editor é uma interface gráfica instalada junto com o EnergyPlus:
+OpenStudio oferece visualização 3D e edição gráfica:
 
 ```bash
-# Localização típica no Linux
-/usr/local/EnergyPlus-23-2-0/PreProcess/IDFEditor/IDFEditor
+# Abrir diretamente o arquivo IDF
+/usr/local/openstudioapplication-1.8.0/bin/OpenStudioApp models/laboratorio_arquitetura.idf
 ```
 
-**Como usar:**
-1. Abra o IDF Editor
-2. File → Open → Selecione `laboratorio_arquitetura.idf`
-3. Navegue pelas classes à esquerda
-4. Edite os valores nos campos à direita
-5. File → Save
-
-### Opção 3: OpenStudio (Interface completa)
-
-OpenStudio oferece uma interface mais amigável:
-
-```bash
-openstudio
-```
-
-**Como importar:**
-1. Abra OpenStudio
-2. File → New
-3. File → Import → IDF File
-4. Selecione `laboratorio_arquitetura.idf`
-5. Edite visualmente no SketchUp Plugin ou na interface
+No OpenStudio você pode:
+- 🏗️ **Geometry:** Ver modelo 3D do laboratório
+- 🧱 **Constructions:** Editar materiais
+- 👥 **Loads:** Ajustar ocupação e equipamentos
+- ❄️ **HVAC Systems:** Configurar ar-condicionados
 
 ---
 
@@ -385,7 +269,7 @@ Abra o arquivo `eplusout.err` e procure por linhas com `** Severe`:
 ### Warnings (Avisos)
 
 Avisos geralmente não impedem a simulação, mas devem ser revisados:
-- Verifique o arquivo `eplusout.err`
+- Verifique o arquivo `results/sim_*/eplusout.err`
 - Corrija se possível para melhorar a precisão
 
 ---
@@ -413,18 +297,25 @@ Avisos geralmente não impedem a simulação, mas devem ser revisados:
 
 ## ✅ Checklist para a Prática
 
-Antes de executar a simulação final, verifique:
+### Dados Coletados ✓
+- [x] Dimensões do laboratório medidas (7.06m × 9.39m × 2.68m)
+- [x] Janelas medidas (4× 1.55m × 1.17m)
+- [x] Porta medida (0.80m × 2.10m)
+- [x] Luminárias contadas (6 unidades LED)
+- [x] Orientação determinada (342° N)
+- [x] Materiais identificados (bloco cerâmico, galvalume)
 
-- [ ] Dimensões do laboratório medidas e atualizadas
-- [ ] Posição e tamanho das janelas corretos
-- [ ] Especificações dos ar-condicionados obtidas
-- [ ] Orientação do edifício determinada
-- [ ] Materiais de construção identificados
-- [ ] Cargas internas estimadas (pessoas, equipamentos, iluminação)
-- [ ] Horários de uso definidos
-- [ ] Arquivo EPW de Fortaleza baixado
-- [ ] Simulação executada sem erros severos
-- [ ] Resultados analisados e gráficos gerados
+### Pendente de Confirmação
+- [ ] Altura do peitoril das janelas
+- [ ] Especificações dos ar-condicionados (BTU)
+- [ ] Temperatura do termostato
+- [ ] Número típico de ocupantes
+- [ ] Potência exata das lâmpadas LED
+
+### Execução
+- [ ] Arquivo EPW baixado (`scripts/baixar_clima_fortaleza.py`)
+- [ ] Simulação executada sem erros
+- [ ] Resultados analisados
 - [ ] Relatório HTML visualizado
 
 ---
@@ -441,21 +332,21 @@ Antes de executar a simulação final, verifique:
 
 Se tiver dúvidas ou encontrar problemas:
 
-1. Verifique o arquivo `eplusout.err` para erros específicos
+1. Verifique o arquivo `results/sim_*/eplusout.err` para erros específicos
 2. Consulte a documentação oficial do EnergyPlus
-3. Revise este README para instruções detalhadas
+3. Consulte o arquivo `DADOS_COLETADOS.md` para ver os dados usados
 4. Consulte o professor ou monitor da disciplina
 
 ---
 
 ## 🔄 Próximos Passos
 
-1. **Coletar dados reais** do laboratório conforme seção acima
-2. **Atualizar o modelo** com os dados coletados
-3. **Executar a simulação** e verificar resultados
-4. **Analisar conforto térmico** e eficiência energética
-5. **Propor melhorias** (isolamento, orientação, ventilação, etc.)
-6. **Simular cenários alternativos** e comparar resultados
+1. ✅ ~~Coletar dados reais~~ (dimensões, janelas, materiais - FEITO)
+2. ✅ ~~Atualizar o modelo~~ com dados coletados (FEITO)
+3. **Confirmar dados pendentes** (peitoril, BTU ar-condicionados, ocupação)
+4. **Executar a simulação** e verificar resultados
+5. **Analisar conforto térmico** e consumo energético
+6. **Simular cenários alternativos** (diferentes temperaturas, ocupação)
 7. **Preparar relatório final** com conclusões
 
 ---

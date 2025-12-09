@@ -1,0 +1,67 @@
+# EnergyPlus - Arquivos de simulação
+results/
+*.csv
+*.htm
+*.html
+*.eio
+*.eso
+*.mtr
+*.mtd
+*.shd
+*.dxf
+*.audit
+*.bnd
+*.rdd
+*.mdd
+*.rvaudit
+*.svg
+*.sci
+*.wrl
+*.sql
+*.edd
+*.dbg
+*.perflog
+*.expidf
+
+# Arquivos temporários do EnergyPlus
+eplusout.*
+in.idf
+expanded.idf
+readvars.audit
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+energyplus-venv/
+venv/
+env/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# OpenStudio
+openstudio/
+*.osm
+*.osc
+
+# Arquivos de clima (podem ser baixados novamente)
+# weather/*.epw
+
+# IDE e editores
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs
+*.log
+
+# Backups
+*.bak
+*_backup.*

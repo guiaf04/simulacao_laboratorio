@@ -4,8 +4,12 @@
 !=============================================================================
 ! LABORATÓRIO DE ARQUITETURA - CAMPUS UFC QUIXADÁ
 ! Simulação Térmica - Grupo 2
-! Descrição: Laboratório com 2 ar-condicionados, 2 janelas grandes, lousa
-! Versão simplificada compatível com EnergyPlus 25.1
+! Descrição: Laboratório com 2 ar-condicionados Split 30.000 BTU/h,
+!            4 janelas de correr (1.55m x 1.17m), porta dupla
+! Dimensões: 7.06m (X) x 9.39m (Y) x 2.68m (Z) = 66.29 m²
+! Orientação: 342° do Norte
+! Materiais: Baseado no Memorial Descritivo - Edital 90009/2024
+! Versão compatível com EnergyPlus 25.1
 !=============================================================================
 
   Version,25.1;
@@ -23,7 +27,7 @@
 
   Building,
     Laboratorio_Arquitetura, !- Name
-    0.0,                     !- North Axis {deg}
+    342.0,                   !- North Axis {deg}
     Suburbs,                 !- Terrain
     0.04,                    !- Loads Convergence Tolerance Value
     0.40,                    !- Temperature Convergence Tolerance Value {deltaC}
@@ -221,60 +225,64 @@
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
 
+! Bloco cerâmico furado 9x19x19cm conforme Memorial Descritivo
   Material,
-    Brick_10cm,              !- Name
+    Bloco_Ceramico_9cm,      !- Name
     MediumRough,             !- Roughness
-    0.10,                    !- Thickness {m}
-    0.89,                    !- Conductivity {W/m-K}
-    1920,                    !- Density {kg/m3}
-    790,                     !- Specific Heat {J/kg-K}
+    0.09,                    !- Thickness {m}
+    0.90,                    !- Conductivity {W/m-K}
+    1400,                    !- Density {kg/m3} (bloco furado)
+    920,                     !- Specific Heat {J/kg-K}
     0.9,                     !- Thermal Absorptance
     0.7,                     !- Solar Absorptance
     0.7;                     !- Visible Absorptance
 
+! Revestimento: Chapisco 5mm + Emboço + Reboco (argamassa cimento/areia 1:3)
   Material,
-    Plaster_2cm,             !- Name
+    Argamassa_2_5cm,         !- Name
     Smooth,                  !- Roughness
-    0.02,                    !- Thickness {m}
-    0.72,                    !- Conductivity {W/m-K}
-    1856,                    !- Density {kg/m3}
-    780,                     !- Specific Heat {J/kg-K}
+    0.025,                   !- Thickness {m}
+    1.15,                    !- Conductivity {W/m-K}
+    2000,                    !- Density {kg/m3}
+    1000,                    !- Specific Heat {J/kg-K}
     0.9,                     !- Thermal Absorptance
-    0.5,                     !- Solar Absorptance
-    0.5;                     !- Visible Absorptance
+    0.3,                     !- Solar Absorptance (pintura clara)
+    0.3;                     !- Visible Absorptance
 
+! Isolamento PU rígido 30mm, 35 kg/m³ conforme Memorial Descritivo
   Material,
-    Insulation_5cm,          !- Name
+    Isolamento_PU_30mm,      !- Name
     MediumRough,             !- Roughness
-    0.05,                    !- Thickness {m}
-    0.04,                    !- Conductivity {W/m-K}
-    91,                      !- Density {kg/m3}
-    837,                     !- Specific Heat {J/kg-K}
+    0.03,                    !- Thickness {m}
+    0.025,                   !- Conductivity {W/m-K} (PU rígido)
+    35,                      !- Density {kg/m3}
+    1400,                    !- Specific Heat {J/kg-K}
     0.9,                     !- Thermal Absorptance
-    0.7,                     !- Solar Absorptance
-    0.7;                     !- Visible Absorptance
+    0.3,                     !- Solar Absorptance (galvalume)
+    0.3;                     !- Visible Absorptance
 
 !-   ===========  ALL OBJECTS IN CLASS: WINDOWMATERIAL:SIMPLEGLAZINGSYSTEM ===========
 
+! Vidro liso comum transparente 4mm conforme Memorial Descritivo
   WindowMaterial:SimpleGlazingSystem,
-    SimpleWindow_DoublePane, !- Name
-    2.7,                     !- U-Factor {W/m2-K}
-    0.70,                    !- Solar Heat Gain Coefficient
-    0.80;                    !- Visible Transmittance
+    Vidro_Simples_4mm,       !- Name
+    5.7,                     !- U-Factor {W/m2-K} (vidro simples 4mm)
+    0.82,                    !- Solar Heat Gain Coefficient
+    0.90;                    !- Visible Transmittance
 
 !-   ===========  ALL OBJECTS IN CLASS: CONSTRUCTION ===========
 
   Construction,
     Wall_Exterior,           !- Name
-    Plaster_2cm,             !- Outside Layer
-    Brick_10cm,              !- Layer 2
-    Plaster_2cm;             !- Layer 3
+    Argamassa_2_5cm,         !- Outside Layer
+    Bloco_Ceramico_9cm,      !- Layer 2
+    Argamassa_2_5cm;         !- Layer 3
 
   Construction,
     Wall_Interior,           !- Name
-    Plaster_2cm,             !- Outside Layer
-    Brick_10cm,              !- Layer 2
-    Plaster_2cm;             !- Layer 3
+    Argamassa_2_5cm,         !- Outside Layer
+    Bloco_Ceramico_9cm,      !- Layer 2
+    Argamassa_2_5cm;         !- Layer 3
 
   Construction,
     Floor_Construction,      !- Name
@@ -283,11 +291,11 @@
   Construction,
     Roof_Construction,       !- Name
     Concrete_20cm,           !- Outside Layer
-    Insulation_5cm;          !- Layer 2
+    Isolamento_PU_30mm;      !- Layer 2
 
   Construction,
     Window_Construction,     !- Name
-    SimpleWindow_DoublePane; !- Outside Layer
+    Vidro_Simples_4mm;       !- Outside Layer
 
 !-   ===========  ALL OBJECTS IN CLASS: GLOBALGEOMETRYRULES ===========
 
@@ -298,8 +306,8 @@
 
 !-   ===========  ALL OBJECTS IN CLASS: ZONE ===========
 
-! *** NOTA: Ajuste as dimensões conforme a planta real do laboratório ***
-! Dimensões assumidas: 10m x 8m x 3m (comprimento x largura x altura)
+! Dimensões reais coletadas: 7.06m (X) x 9.39m (Y) x 2.68m (Z)
+! Área: 66.29 m² | Volume: 177.66 m³
 
   Zone,
     Laboratorio_Zone,        !- Name
@@ -307,12 +315,12 @@
     0, 0, 0,                 !- X,Y,Z  {m}
     1,                       !- Type
     1,                       !- Multiplier
-    autocalculate,           !- Ceiling Height {m}
-    autocalculate;           !- Volume {m3}
+    2.68,                    !- Ceiling Height {m}
+    177.66;                  !- Volume {m3}
 
 !-   ===========  ALL OBJECTS IN CLASS: BUILDINGSURFACE:DETAILED ===========
 
-! Piso
+! Piso (7.06m x 9.39m)
   BuildingSurface:Detailed,
     Floor_Lab,               !- Name
     Floor,                   !- Surface Type
@@ -326,11 +334,11 @@
     0.0,                     !- View Factor to Ground
     4,                       !- Number of Vertices
     0.0, 0.0, 0.0,           !- X,Y,Z  1 {m}
-    0.0, 8.0, 0.0,           !- X,Y,Z  2 {m}
-    10.0, 8.0, 0.0,          !- X,Y,Z  3 {m}
-    10.0, 0.0, 0.0;          !- X,Y,Z  4 {m}
+    0.0, 9.39, 0.0,          !- X,Y,Z  2 {m}
+    7.06, 9.39, 0.0,         !- X,Y,Z  3 {m}
+    7.06, 0.0, 0.0;          !- X,Y,Z  4 {m}
 
-! Teto
+! Teto (7.06m x 9.39m a 2.68m de altura)
   BuildingSurface:Detailed,
     Roof_Lab,                !- Name
     Roof,                    !- Surface Type
@@ -343,12 +351,12 @@
     WindExposed,             !- Wind Exposure
     0.0,                     !- View Factor to Ground
     4,                       !- Number of Vertices
-    0.0, 8.0, 3.0,           !- X,Y,Z  1 {m}
-    0.0, 0.0, 3.0,           !- X,Y,Z  2 {m}
-    10.0, 0.0, 3.0,          !- X,Y,Z  3 {m}
-    10.0, 8.0, 3.0;          !- X,Y,Z  4 {m}
+    0.0, 9.39, 2.68,         !- X,Y,Z  1 {m}
+    0.0, 0.0, 2.68,          !- X,Y,Z  2 {m}
+    7.06, 0.0, 2.68,         !- X,Y,Z  3 {m}
+    7.06, 9.39, 2.68;        !- X,Y,Z  4 {m}
 
-! Parede com Porta (frente)
+! Parede com Porta (frente - largura 7.06m)
   BuildingSurface:Detailed,
     Wall_Front,              !- Name
     Wall,                    !- Surface Type
@@ -361,14 +369,14 @@
     WindExposed,             !- Wind Exposure
     0.5,                     !- View Factor to Ground
     4,                       !- Number of Vertices
-    0.0, 0.0, 3.0,           !- X,Y,Z  1 {m}
+    0.0, 0.0, 2.68,          !- X,Y,Z  1 {m}
     0.0, 0.0, 0.0,           !- X,Y,Z  2 {m}
-    10.0, 0.0, 0.0,          !- X,Y,Z  3 {m}
-    10.0, 0.0, 3.0;          !- X,Y,Z  4 {m}
+    7.06, 0.0, 0.0,          !- X,Y,Z  3 {m}
+    7.06, 0.0, 2.68;         !- X,Y,Z  4 {m}
 
-! Parede com Janelas (fundo - oposta à porta)
+! Parede com 4 Janelas (fundo - largura 7.06m, oposta à porta)
   BuildingSurface:Detailed,
-    Wall_Back_Windows,       !- Name
+    Wall_Back,               !- Name
     Wall,                    !- Surface Type
     Wall_Exterior,           !- Construction Name
     Laboratorio_Zone,        !- Zone Name
@@ -379,12 +387,12 @@
     WindExposed,             !- Wind Exposure
     0.5,                     !- View Factor to Ground
     4,                       !- Number of Vertices
-    10.0, 8.0, 3.0,          !- X,Y,Z  1 {m}
-    10.0, 8.0, 0.0,          !- X,Y,Z  2 {m}
-    0.0, 8.0, 0.0,           !- X,Y,Z  3 {m}
-    0.0, 8.0, 3.0;           !- X,Y,Z  4 {m}
+    7.06, 9.39, 2.68,        !- X,Y,Z  1 {m}
+    7.06, 9.39, 0.0,         !- X,Y,Z  2 {m}
+    0.0, 9.39, 0.0,          !- X,Y,Z  3 {m}
+    0.0, 9.39, 2.68;         !- X,Y,Z  4 {m}
 
-! Parede Lateral Esquerda (com lousa)
+! Parede Lateral Esquerda (com lousa - profundidade 9.39m)
   BuildingSurface:Detailed,
     Wall_Left_Blackboard,    !- Name
     Wall,                    !- Surface Type
@@ -397,12 +405,12 @@
     WindExposed,             !- Wind Exposure
     0.5,                     !- View Factor to Ground
     4,                       !- Number of Vertices
-    0.0, 8.0, 3.0,           !- X,Y,Z  1 {m}
-    0.0, 8.0, 0.0,           !- X,Y,Z  2 {m}
+    0.0, 9.39, 2.68,         !- X,Y,Z  1 {m}
+    0.0, 9.39, 0.0,          !- X,Y,Z  2 {m}
     0.0, 0.0, 0.0,           !- X,Y,Z  3 {m}
-    0.0, 0.0, 3.0;           !- X,Y,Z  4 {m}
+    0.0, 0.0, 2.68;          !- X,Y,Z  4 {m}
 
-! Parede Lateral Direita (com ar-condicionados)
+! Parede Lateral Direita com 4 Janelas (profundidade 9.39m)
   BuildingSurface:Detailed,
     Wall_Right_AC,           !- Name
     Wall,                    !- Surface Type
@@ -415,46 +423,82 @@
     WindExposed,             !- Wind Exposure
     0.5,                     !- View Factor to Ground
     4,                       !- Number of Vertices
-    10.0, 0.0, 3.0,          !- X,Y,Z  1 {m}
-    10.0, 0.0, 0.0,          !- X,Y,Z  2 {m}
-    10.0, 8.0, 0.0,          !- X,Y,Z  3 {m}
-    10.0, 8.0, 3.0;          !- X,Y,Z  4 {m}
+    7.06, 0.0, 2.68,         !- X,Y,Z  1 {m}
+    7.06, 0.0, 0.0,          !- X,Y,Z  2 {m}
+    7.06, 9.39, 0.0,         !- X,Y,Z  3 {m}
+    7.06, 9.39, 2.68;        !- X,Y,Z  4 {m}
 
 !-   ===========  ALL OBJECTS IN CLASS: FENESTRATIONSURFACE:DETAILED ===========
 
-! Janela 1 (parede do fundo)
+! 4 Janelas de correr na parede lateral direita (X=7.06m, profundidade 9.39m)
+! Cada janela: 1.55m x 1.17m, peitoril 1.00m
+! Vértices em ordem anti-horária quando vistos de fora (exterior)
+
+! Janela 1 (parede lateral direita - Y: 0.36 a 1.91)
   FenestrationSurface:Detailed,
     Window_1,                !- Name
     Window,                  !- Surface Type
     Window_Construction,     !- Construction Name
-    Wall_Back_Windows,       !- Building Surface Name
+    Wall_Right_AC,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
-    4.5, 8.0, 2.5,           !- X,Y,Z  1 {m}
-    4.5, 8.0, 0.5,           !- X,Y,Z  2 {m}
-    2.0, 8.0, 0.5,           !- X,Y,Z  3 {m}
-    2.0, 8.0, 2.5;           !- X,Y,Z  4 {m}
+    7.06, 0.36, 2.17,        !- X,Y,Z  1 {m}
+    7.06, 0.36, 1.00,        !- X,Y,Z  2 {m}
+    7.06, 1.91, 1.00,        !- X,Y,Z  3 {m}
+    7.06, 1.91, 2.17;        !- X,Y,Z  4 {m}
 
-! Janela 2 (parede do fundo)
+! Janela 2 (parede lateral direita - Y: 2.755 a 4.305)
   FenestrationSurface:Detailed,
     Window_2,                !- Name
     Window,                  !- Surface Type
     Window_Construction,     !- Construction Name
-    Wall_Back_Windows,       !- Building Surface Name
+    Wall_Right_AC,           !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
-    8.0, 8.0, 2.5,           !- X,Y,Z  1 {m}
-    8.0, 8.0, 0.5,           !- X,Y,Z  2 {m}
-    5.5, 8.0, 0.5,           !- X,Y,Z  3 {m}
-    5.5, 8.0, 2.5;           !- X,Y,Z  4 {m}
+    7.06, 2.755, 2.17,       !- X,Y,Z  1 {m}
+    7.06, 2.755, 1.00,       !- X,Y,Z  2 {m}
+    7.06, 4.305, 1.00,       !- X,Y,Z  3 {m}
+    7.06, 4.305, 2.17;       !- X,Y,Z  4 {m}
 
-! Porta
+! Janela 3 (parede lateral direita - Y: 5.15 a 6.70)
+  FenestrationSurface:Detailed,
+    Window_3,                !- Name
+    Window,                  !- Surface Type
+    Window_Construction,     !- Construction Name
+    Wall_Right_AC,           !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    0.5,                     !- View Factor to Ground
+    ,                        !- Frame and Divider Name
+    1.0,                     !- Multiplier
+    4,                       !- Number of Vertices
+    7.06, 5.15, 2.17,        !- X,Y,Z  1 {m}
+    7.06, 5.15, 1.00,        !- X,Y,Z  2 {m}
+    7.06, 6.70, 1.00,        !- X,Y,Z  3 {m}
+    7.06, 6.70, 2.17;        !- X,Y,Z  4 {m}
+
+! Janela 4 (parede lateral direita - Y: 7.48 a 9.03)
+  FenestrationSurface:Detailed,
+    Window_4,                !- Name
+    Window,                  !- Surface Type
+    Window_Construction,     !- Construction Name
+    Wall_Right_AC,           !- Building Surface Name
+    ,                        !- Outside Boundary Condition Object
+    0.5,                     !- View Factor to Ground
+    ,                        !- Frame and Divider Name
+    1.0,                     !- Multiplier
+    4,                       !- Number of Vertices
+    7.06, 7.48, 2.17,        !- X,Y,Z  1 {m}
+    7.06, 7.48, 1.00,        !- X,Y,Z  2 {m}
+    7.06, 9.03, 1.00,        !- X,Y,Z  3 {m}
+    7.06, 9.03, 2.17;        !- X,Y,Z  4 {m}
+
+! Porta dupla (frente - X centralizado, largura 1.195m, altura 2.10m)
   FenestrationSurface:Detailed,
     Door_Main,               !- Name
     Door,                    !- Surface Type
@@ -465,19 +509,20 @@
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
-    4.0, 0.0, 2.1,           !- X,Y,Z  1 {m}
-    4.0, 0.0, 0.0,           !- X,Y,Z  2 {m}
-    5.0, 0.0, 0.0,           !- X,Y,Z  3 {m}
-    5.0, 0.0, 2.1;           !- X,Y,Z  4 {m}
+    2.9325, 0.0, 2.10,       !- X,Y,Z  1 {m} (centro - largura/2)
+    2.9325, 0.0, 0.0,        !- X,Y,Z  2 {m}
+    4.1275, 0.0, 0.0,        !- X,Y,Z  3 {m} (centro + largura/2)
+    4.1275, 0.0, 2.10;       !- X,Y,Z  4 {m}
 
 !-   ===========  ALL OBJECTS IN CLASS: PEOPLE ===========
 
+! Ocupação típica: ~25 pessoas (sala de aula)
   People,
     Ocupacao_Lab,            !- Name
     Laboratorio_Zone,        !- Zone or ZoneList Name
     Ocupacao_Laboratorio,    !- Number of People Schedule Name
     People,                  !- Number of People Calculation Method
-    30,                      !- Number of People
+    25,                      !- Number of People
     ,                        !- People per Zone Floor Area {person/m2}
     ,                        !- Zone Floor Area per Person {m2/person}
     0.3,                     !- Fraction Radiant
@@ -486,13 +531,15 @@
 
 !-   ===========  ALL OBJECTS IN CLASS: LIGHTS ===========
 
+! 6 luminárias x 2 lâmpadas LED T5 10W = 120W total
+! Densidade: 120W / 66.29m² = 1.81 W/m²
   Lights,
     Iluminacao_Lab,          !- Name
     Laboratorio_Zone,        !- Zone or ZoneList Name
     Iluminacao_Laboratorio,  !- Schedule Name
-    Watts/Area,              !- Design Level Calculation Method
-    ,                        !- Lighting Level {W}
-    12.0,                    !- Watts per Zone Floor Area {W/m2}
+    LightingLevel,           !- Design Level Calculation Method
+    120,                     !- Lighting Level {W}
+    ,                        !- Watts per Zone Floor Area {W/m2}
     ,                        !- Watts per Person {W/person}
     0.0,                     !- Return Air Fraction
     0.42,                    !- Fraction Radiant

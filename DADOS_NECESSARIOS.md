@@ -8,13 +8,13 @@ Preencha esta lista com os dados reais do laboratório.
 ## 📐 1. DIMENSÕES DO LABORATÓRIO
 
 ### Dimensões Gerais:
-- [ ] **Comprimento (X):** _______ metros
-- [ ] **Largura (Y):** _______ metros  
-- [ ] **Altura (pé-direito):** _______ metros
-- [ ] **Área útil:** _______ m²
+- [x] **Comprimento (X):** 7.06 metros
+- [x] **Largura (Y):** 9.39 metros  
+- [x] **Altura (pé-direito):** 2.68 metros
+- [x] **Área útil:** 64 m²
 
 ### Orientação:
-- [ ] **Ângulo em relação ao Norte geográfico:** _______ graus
+- [x] **Ângulo em relação ao Norte geográfico:** 342° graus
   - Use Google Earth ou bússola para medir
   - 0° = Norte, 90° = Leste, 180° = Sul, 270° = Oeste
 
@@ -57,124 +57,124 @@ Preencha esta lista com os dados reais do laboratório.
 ## ❄️ 3. AR-CONDICIONADOS
 
 ### AR-CONDICIONADO 1:
-- [ ] **Marca:** _______________________
-- [ ] **Modelo:** _______________________
-- [ ] **Capacidade (BTU/h):** _______________________
-- [ ] **Capacidade (kW):** _______ kW (BTU/h ÷ 3412)
-- [ ] **Tipo:** 
-  - [ ] Split
+- [x] **Marca:** Springer
+- [x] **Modelo:** Carrier Space 42XQM30C5/38KCA030515MC
+- [x] **Capacidade (BTU/h):** 30000
+- [x] **Capacidade (kW):** 8.8 kW (BTU/h ÷ 3412)
+- [x] **Tipo:** 
+  - [X] Split
   - [ ] Janela
   - [ ] Outro: _____________
-- [ ] **Eficiência energética (selo Procel):** 
+- [x] **Eficiência energética (selo Procel):** 
   - [ ] A (mais eficiente)
   - [ ] B
-  - [ ] C
+  - [x] C
   - [ ] D
   - [ ] E (menos eficiente)
-- [ ] **Vazão de ar:** _______ m³/h ou CFM
+- [x] **Vazão de ar:** 1090 m³/h ou CFM
 - [ ] **Posição na parede:** 
   - Altura do piso: _______ metros
   - Distância da extremidade: _______ metros
 
 ### AR-CONDICIONADO 2:
-- [ ] **Marca:** _______________________
-- [ ] **Modelo:** _______________________
-- [ ] **Capacidade (BTU/h):** _______________________
-- [ ] **Capacidade (kW):** _______ kW
-- [ ] **Tipo:** 
-  - [ ] Split
+- [x] **Marca:** Springer
+- [x] **Modelo:** Carrier Space 42XQM30C5/38KCA030515MC
+- [x] **Capacidade (BTU/h):** 30000
+- [x] **Capacidade (kW):** 8.8 kW (BTU/h ÷ 3412)
+- [x] **Tipo:** 
+  - [X] Split
   - [ ] Janela
   - [ ] Outro: _____________
-- [ ] **Eficiência energética (selo Procel):** 
-  - [ ] A
+- [x] **Eficiência energética (selo Procel):** 
+  - [ ] A (mais eficiente)
   - [ ] B
-  - [ ] C
+  - [x] C
   - [ ] D
-  - [ ] E
-- [ ] **Vazão de ar:** _______ m³/h ou CFM
+  - [ ] E (menos eficiente)
+- [x] **Vazão de ar:** 1090 m³/h ou CFM
 - [ ] **Posição na parede:** 
   - Altura do piso: _______ metros
   - Distância da extremidade: _______ metros
 
 ### Configuração de Uso:
 - [ ] **Temperatura do termostato:** _______ °C
-- [ ] **Horário de funcionamento:**
-  - Segunda a sexta: das ___:___ às ___:___
-  - Sábado: das ___:___ às ___:___
-  - Domingo: [ ] Ligado [ ] Desligado
+- [x] **Horário de funcionamento:**
+  - Segunda a sexta: das 7:00 às 18:00
+  - Sábado: Desligado
+  - Domingo: [ ] Ligado [x] Desligado
 
 ---
 
 ## 🚪 4. PORTAS
 
 ### Porta Principal:
-- [ ] **Largura:** _______ metros
-- [ ] **Altura:** _______ metros
-- [ ] **Material:**
-  - [ ] Madeira maciça
+- [x] **Largura:** 1.19 metros
+- [x] **Altura:** 2.1 metros
+- [x] **Material:**
+  - [x] Madeira maciça
   - [ ] Madeira oca
   - [ ] Metal
   - [ ] Vidro
   - [ ] Outro: _____________
-- [ ] **Possui vidro/visor:** Sim [ ] Não [ ]
+- [x] **Possui vidro/visor:** Sim [x] Não [ ]
 
 ---
 
 ## 🧱 5. MATERIAIS DE CONSTRUÇÃO
 
 ### Paredes Externas:
-- [ ] **Material principal:**
-  - [ ] Tijolo cerâmico (6 furos)
+- [X] **Material principal:**
+  - [X] Tijolo cerâmico (6 furos)
   - [ ] Tijolo cerâmico (8 furos)
   - [ ] Bloco de concreto
   - [ ] Bloco cerâmico
   - [ ] Outro: _____________
-- [ ] **Espessura do bloco/tijolo:** _______ cm
-- [ ] **Revestimento externo:**
-  - [ ] Reboco + pintura
+- [x] **Espessura do bloco/tijolo:** 9 cm
+- [x] **Revestimento externo:**
+  - [x] Reboco + pintura
   - [ ] Cerâmica/pastilha
   - [ ] Outro: _____________
-  - Espessura: _______ cm
-- [ ] **Revestimento interno:**
+  - Espessura: 2 cm
+- [x] **Revestimento interno:**
   - [ ] Reboco + pintura
-  - [ ] Gesso
+  - [x] Gesso
   - [ ] Outro: _____________
-  - Espessura: _______ cm
-- [ ] **Cor externa:** _____________ (claro/escuro)
-- [ ] **Cor interna:** _____________ (claro/escuro)
+  - Espessura: 5 cm
+- [x] **Cor externa:** Amerelo Claro (claro/escuro)
+- [x] **Cor interna:** Branco (claro/escuro)
 
 ### Paredes Internas:
-- [ ] **Material:** _______________________
+- [ ] **Material:** Tijolo
 - [ ] **Espessura total:** _______ cm
 
 ### Piso:
-- [ ] **Material:**
-  - [ ] Cerâmica
+- [x] **Material:**
+  - [x] Cerâmica
   - [ ] Porcelanato
   - [ ] Cimento queimado
   - [ ] Granito
   - [ ] Outro: _____________
-- [ ] **Cor:** _____________ (claro/escuro)
-- [ ] **Há contrapiso:** Sim [ ] Não [ ]
-  - Espessura: _______ cm
+- [x] **Cor:** Granito claro (claro/escuro)
+- [x] **Há contrapiso:** Sim [x] Não [ ]
+  - Espessura: 4 cm
 
 ### Teto/Cobertura:
 - [ ] **Tipo de laje:**
-  - [ ] Laje maciça de concreto
+  - [x] Laje maciça de concreto
   - [ ] Laje pré-moldada (vigotas + lajotas)
   - [ ] Laje treliçada
   - [ ] Sem laje (forro direto no telhado)
   - [ ] Outro: _____________
-- [ ] **Espessura da laje:** _______ cm
-- [ ] **Tipo de forro:**
-  - [ ] Gesso
+- [x] **Espessura da laje:** 8 cm
+- [x] **Tipo de forro:**
+  - [x] Gesso
   - [ ] PVC
   - [ ] Mineral (fibra)
   - [ ] Madeira
   - [ ] Sem forro
   - [ ] Outro: _____________
-- [ ] **Altura do forro ao teto/laje:** _______ cm
-- [ ] **Isolamento térmico:** Sim [ ] Não [ ]
+- [x] **Altura do forro ao teto/laje:** 30 cm
+- [x] **Isolamento térmico:** Sim [x] Não [ ]
   - Tipo: _____________
   - Espessura: _______ cm
 - [ ] **Cobertura (se visível):**
@@ -190,13 +190,13 @@ Preencha esta lista com os dados reais do laboratório.
 
 ### Iluminação Artificial:
 - [ ] **Tipo de lâmpada:**
-  - [ ] LED
+  - [x] LED
   - [ ] Fluorescente tubular
   - [ ] Fluorescente compacta
   - [ ] Incandescente
   - [ ] Outro: _____________
-- [ ] **Quantidade de luminárias:** _______
-- [ ] **Lâmpadas por luminária:** _______
+- [ ] **Quantidade de luminárias:** 8
+- [ ] **Lâmpadas por luminária:** 2
 - [ ] **Potência por lâmpada:** _______ W
 - [ ] **Potência total de iluminação:** _______ W
 
@@ -264,15 +264,14 @@ Preencha esta lista com os dados reais do laboratório.
 ## 🌬️ 9. VENTILAÇÃO
 
 ### Ventilação Natural:
-- [ ] **Janelas são abertas regularmente:** Sim [ ] Não [ ]
+- [ ] **Janelas são abertas regularmente:** Sim [ ] Não [x]
 - [ ] **Período de abertura:** das ___:___ às ___:___
 - [ ] **Ventiladores de teto:** 
-  - Quantidade: _______
-  - Potência: _______ W cada
+    Não possui
 
 ### Infiltração:
-- [ ] **Qualidade de vedação:**
-  - [ ] Boa (portas e janelas bem vedadas)
+- [x] **Qualidade de vedação:**
+  - [x] Boa (portas e janelas bem vedadas)
   - [ ] Média (algumas frestas)
   - [ ] Ruim (muitas frestas e aberturas)
 
