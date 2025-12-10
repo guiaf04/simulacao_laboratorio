@@ -45,6 +45,7 @@ build/
 
 # OpenStudio
 openstudio/
+models/lab/
 *.osm
 *.osc
 

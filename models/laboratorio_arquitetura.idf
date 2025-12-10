@@ -356,9 +356,9 @@
     7.06, 0.0, 2.68,         !- X,Y,Z  3 {m}
     7.06, 9.39, 2.68;        !- X,Y,Z  4 {m}
 
-! Parede com Porta (frente - largura 7.06m)
+! Parede Frontal com Lousa (Y=0, largura 7.06m)
   BuildingSurface:Detailed,
-    Wall_Front,              !- Name
+    Wall_Front_Blackboard,   !- Name
     Wall,                    !- Surface Type
     Wall_Exterior,           !- Construction Name
     Laboratorio_Zone,        !- Zone Name
@@ -374,9 +374,9 @@
     7.06, 0.0, 0.0,          !- X,Y,Z  3 {m}
     7.06, 0.0, 2.68;         !- X,Y,Z  4 {m}
 
-! Parede com 4 Janelas (fundo - largura 7.06m, oposta à porta)
+! Parede do Fundo com Ar-Condicionados (Y=9.39, largura 7.06m)
   BuildingSurface:Detailed,
-    Wall_Back,               !- Name
+    Wall_Back_AC,            !- Name
     Wall,                    !- Surface Type
     Wall_Exterior,           !- Construction Name
     Laboratorio_Zone,        !- Zone Name
@@ -392,9 +392,9 @@
     0.0, 9.39, 0.0,          !- X,Y,Z  3 {m}
     0.0, 9.39, 2.68;         !- X,Y,Z  4 {m}
 
-! Parede Lateral Esquerda (com lousa - profundidade 9.39m)
+! Parede Lateral Esquerda com 4 Janelas (X=0, profundidade 9.39m)
   BuildingSurface:Detailed,
-    Wall_Left_Blackboard,    !- Name
+    Wall_Left_Windows,       !- Name
     Wall,                    !- Surface Type
     Wall_Exterior,           !- Construction Name
     Laboratorio_Zone,        !- Zone Name
@@ -410,9 +410,9 @@
     0.0, 0.0, 0.0,           !- X,Y,Z  3 {m}
     0.0, 0.0, 2.68;          !- X,Y,Z  4 {m}
 
-! Parede Lateral Direita com 4 Janelas (profundidade 9.39m)
+! Parede Lateral Direita com Porta (X=7.06, profundidade 9.39m)
   BuildingSurface:Detailed,
-    Wall_Right_AC,           !- Name
+    Wall_Right_Door,         !- Name
     Wall,                    !- Surface Type
     Wall_Exterior,           !- Construction Name
     Laboratorio_Zone,        !- Zone Name
@@ -430,89 +430,89 @@
 
 !-   ===========  ALL OBJECTS IN CLASS: FENESTRATIONSURFACE:DETAILED ===========
 
-! 4 Janelas de correr na parede lateral direita (X=7.06m, profundidade 9.39m)
+! 4 Janelas de correr na parede lateral esquerda (X=0, profundidade 9.39m)
 ! Cada janela: 1.55m x 1.17m, peitoril 1.00m
 ! Vértices em ordem anti-horária quando vistos de fora (exterior)
 
-! Janela 1 (parede lateral direita - Y: 0.36 a 1.91)
+! Janela 1 (parede lateral esquerda - Y: 0.36 a 1.91)
   FenestrationSurface:Detailed,
     Window_1,                !- Name
     Window,                  !- Surface Type
     Window_Construction,     !- Construction Name
-    Wall_Right_AC,           !- Building Surface Name
+    Wall_Left_Windows,       !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
-    7.06, 0.36, 2.17,        !- X,Y,Z  1 {m}
-    7.06, 0.36, 1.00,        !- X,Y,Z  2 {m}
-    7.06, 1.91, 1.00,        !- X,Y,Z  3 {m}
-    7.06, 1.91, 2.17;        !- X,Y,Z  4 {m}
+    0.0, 1.91, 2.17,         !- X,Y,Z  1 {m}
+    0.0, 1.91, 1.00,         !- X,Y,Z  2 {m}
+    0.0, 0.36, 1.00,         !- X,Y,Z  3 {m}
+    0.0, 0.36, 2.17;         !- X,Y,Z  4 {m}
 
-! Janela 2 (parede lateral direita - Y: 2.755 a 4.305)
+! Janela 2 (parede lateral esquerda - Y: 2.755 a 4.305)
   FenestrationSurface:Detailed,
     Window_2,                !- Name
     Window,                  !- Surface Type
     Window_Construction,     !- Construction Name
-    Wall_Right_AC,           !- Building Surface Name
+    Wall_Left_Windows,       !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
-    7.06, 2.755, 2.17,       !- X,Y,Z  1 {m}
-    7.06, 2.755, 1.00,       !- X,Y,Z  2 {m}
-    7.06, 4.305, 1.00,       !- X,Y,Z  3 {m}
-    7.06, 4.305, 2.17;       !- X,Y,Z  4 {m}
+    0.0, 4.305, 2.17,        !- X,Y,Z  1 {m}
+    0.0, 4.305, 1.00,        !- X,Y,Z  2 {m}
+    0.0, 2.755, 1.00,        !- X,Y,Z  3 {m}
+    0.0, 2.755, 2.17;        !- X,Y,Z  4 {m}
 
-! Janela 3 (parede lateral direita - Y: 5.15 a 6.70)
+! Janela 3 (parede lateral esquerda - Y: 5.15 a 6.70)
   FenestrationSurface:Detailed,
     Window_3,                !- Name
     Window,                  !- Surface Type
     Window_Construction,     !- Construction Name
-    Wall_Right_AC,           !- Building Surface Name
+    Wall_Left_Windows,       !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
-    7.06, 5.15, 2.17,        !- X,Y,Z  1 {m}
-    7.06, 5.15, 1.00,        !- X,Y,Z  2 {m}
-    7.06, 6.70, 1.00,        !- X,Y,Z  3 {m}
-    7.06, 6.70, 2.17;        !- X,Y,Z  4 {m}
+    0.0, 6.70, 2.17,         !- X,Y,Z  1 {m}
+    0.0, 6.70, 1.00,         !- X,Y,Z  2 {m}
+    0.0, 5.15, 1.00,         !- X,Y,Z  3 {m}
+    0.0, 5.15, 2.17;         !- X,Y,Z  4 {m}
 
-! Janela 4 (parede lateral direita - Y: 7.48 a 9.03)
+! Janela 4 (parede lateral esquerda - Y: 7.48 a 9.03)
   FenestrationSurface:Detailed,
     Window_4,                !- Name
     Window,                  !- Surface Type
     Window_Construction,     !- Construction Name
-    Wall_Right_AC,           !- Building Surface Name
+    Wall_Left_Windows,       !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
-    7.06, 7.48, 2.17,        !- X,Y,Z  1 {m}
-    7.06, 7.48, 1.00,        !- X,Y,Z  2 {m}
-    7.06, 9.03, 1.00,        !- X,Y,Z  3 {m}
-    7.06, 9.03, 2.17;        !- X,Y,Z  4 {m}
+    0.0, 9.03, 2.17,         !- X,Y,Z  1 {m}
+    0.0, 9.03, 1.00,         !- X,Y,Z  2 {m}
+    0.0, 7.48, 1.00,         !- X,Y,Z  3 {m}
+    0.0, 7.48, 2.17;         !- X,Y,Z  4 {m}
 
-! Porta dupla (frente - X centralizado, largura 1.195m, altura 2.10m)
+! Porta dupla (parede lateral direita - Y centralizado, largura 1.195m, altura 2.10m)
   FenestrationSurface:Detailed,
     Door_Main,               !- Name
     Door,                    !- Surface Type
     Wall_Interior,           !- Construction Name
-    Wall_Front,              !- Building Surface Name
+    Wall_Right_Door,         !- Building Surface Name
     ,                        !- Outside Boundary Condition Object
     0.5,                     !- View Factor to Ground
     ,                        !- Frame and Divider Name
     1.0,                     !- Multiplier
     4,                       !- Number of Vertices
-    2.9325, 0.0, 2.10,       !- X,Y,Z  1 {m} (centro - largura/2)
-    2.9325, 0.0, 0.0,        !- X,Y,Z  2 {m}
-    4.1275, 0.0, 0.0,        !- X,Y,Z  3 {m} (centro + largura/2)
-    4.1275, 0.0, 2.10;       !- X,Y,Z  4 {m}
+    7.06, 4.0975, 2.10,      !- X,Y,Z  1 {m} (centro - largura/2)
+    7.06, 4.0975, 0.0,       !- X,Y,Z  2 {m}
+    7.06, 5.2925, 0.0,       !- X,Y,Z  3 {m} (centro + largura/2)
+    7.06, 5.2925, 2.10;      !- X,Y,Z  4 {m}
 
 !-   ===========  ALL OBJECTS IN CLASS: PEOPLE ===========
 
@@ -597,12 +597,15 @@
     Termostato_Aquecimento,  !- Heating Setpoint Temperature Schedule Name
     Termostato_Resfriamento; !- Cooling Setpoint Temperature Schedule Name
 
-!-   ===========  ALL OBJECTS IN CLASS: HVACTEMPLATE:ZONE:IDEALLOADSAIRSYSTEM ===========
+!-   ===========  ALL OBJECTS IN CLASS: ZONEHVAC:IDEALLOADSAIRSYSTEM ===========
+! Substituído HVACTemplate por objeto expandido para compatibilidade com OpenStudio
 
-  HVACTemplate:Zone:IdealLoadsAirSystem,
-    Laboratorio_Zone,        !- Zone Name
-    ,                        !- Template Thermostat Name
-    ,                        !- System Availability Schedule Name
+  ZoneHVAC:IdealLoadsAirSystem,
+    Laboratorio_Zone Ideal Loads Air System,  !- Name
+    ,                        !- Availability Schedule Name
+    Laboratorio_Zone Ideal Loads Supply Inlet,  !- Zone Supply Air Node Name
+    ,                        !- Zone Exhaust Air Node Name
+    ,                        !- System Inlet Air Node Name
     50,                      !- Maximum Heating Supply Air Temperature {C}
     13,                      !- Minimum Cooling Supply Air Temperature {C}
     0.015,                   !- Maximum Heating Supply Air Humidity Ratio {kgWater/kgDryAir}
@@ -616,15 +619,37 @@
     ,                        !- Heating Availability Schedule Name
     ,                        !- Cooling Availability Schedule Name
     ConstantSupplyHumidityRatio,  !- Dehumidification Control Type
-    ,                        !- Cooling Sensible Heat Ratio {dimensionless}
+    0.7,                     !- Cooling Sensible Heat Ratio {dimensionless}
     ConstantSupplyHumidityRatio,  !- Humidification Control Type
     ,                        !- Design Specification Outdoor Air Object Name
     ,                        !- Outdoor Air Inlet Node Name
     ,                        !- Demand Controlled Ventilation Type
     ,                        !- Outdoor Air Economizer Type
     ,                        !- Heat Recovery Type
-    ,                        !- Sensible Heat Recovery Effectiveness {dimensionless}
-    ;                        !- Latent Heat Recovery Effectiveness {dimensionless}
+    0.70,                    !- Sensible Heat Recovery Effectiveness {dimensionless}
+    0.65;                    !- Latent Heat Recovery Effectiveness {dimensionless}
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONEHVAC:EQUIPMENTCONNECTIONS ===========
+
+  ZoneHVAC:EquipmentConnections,
+    Laboratorio_Zone,        !- Zone Name
+    Laboratorio_Zone Equipment,  !- Zone Conditioning Equipment List Name
+    Laboratorio_Zone Ideal Loads Supply Inlet,  !- Zone Air Inlet Node or NodeList Name
+    ,                        !- Zone Air Exhaust Node or NodeList Name
+    Laboratorio_Zone Zone Air Node,  !- Zone Air Node Name
+    Laboratorio_Zone Return Outlet;  !- Zone Return Air Node or NodeList Name
+
+!-   ===========  ALL OBJECTS IN CLASS: ZONEHVAC:EQUIPMENTLIST ===========
+
+  ZoneHVAC:EquipmentList,
+    Laboratorio_Zone Equipment,  !- Name
+    SequentialLoad,          !- Load Distribution Scheme
+    ZoneHVAC:IdealLoadsAirSystem,  !- Zone Equipment 1 Object Type
+    Laboratorio_Zone Ideal Loads Air System,  !- Zone Equipment 1 Name
+    1,                       !- Zone Equipment 1 Cooling Sequence
+    1,                       !- Zone Equipment 1 Heating or No-Load Sequence
+    ,                        !- Zone Equipment 1 Sequential Cooling Fraction Schedule Name
+    ;                        !- Zone Equipment 1 Sequential Heating Fraction Schedule Name
 
 !-   ===========  ALL OBJECTS IN CLASS: OUTPUT:VARIABLEDICTIONARY ===========
 
