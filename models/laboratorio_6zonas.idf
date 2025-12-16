@@ -3,12 +3,24 @@
 
 !=============================================================================
 ! LABORATÓRIO DE ARQUITETURA - CAMPUS UFC QUIXADÁ
-! Simulação Térmica - Grupo 2
+! Simulação Térmica - Grupo 2 - ANÁLISE DE GRADIENTE TÉRMICO
 ! Descrição: Laboratório com 2 ar-condicionados Split 30.000 BTU/h,
 !            4 janelas de correr (1.55m x 1.17m), porta dupla
 ! Dimensões: 7.06m (X) x 9.39m (Y) x 2.68m (Z) = 66.29 m²
 ! Orientação: 342° do Norte
 ! Materiais: Baseado no Memorial Descritivo - Edital 90009/2024
+!
+! ANÁLISE DE 6 REGIÕES (grades conceituais para interpretação):
+!   Divisão virtual em 2 colunas x 3 linhas (~3.53m x 3.13m cada)
+!   - Região 1 (Frente-Esquerda): Próximo janela 1 + lousa
+!   - Região 2 (Frente-Direita): Próximo porta + lousa
+!   - Região 3 (Centro-Esquerda): Próximo janela 2
+!   - Região 4 (Centro-Direita): Centro da sala
+!   - Região 5 (Fundo-Esquerda): Próximo janelas 3,4 + ACs
+!   - Região 6 (Fundo-Direita): Próximo ACs
+!
+! Use análise de temperatura de superfícies e ar da zona única
+! para inferir comportamento em diferentes regiões espaciais
 ! Versão compatível com EnergyPlus 25.1
 !=============================================================================
 
@@ -691,16 +703,56 @@
 
 !-   ===========  ALL OBJECTS IN CLASS: OUTPUT:VARIABLE ===========
 
-  Output:Variable,*,Site Outdoor Air Drybulb Temperature,Timestep;
-  Output:Variable,*,Site Outdoor Air Wetbulb Temperature,Timestep;
-  Output:Variable,*,Site Outdoor Air Relative Humidity,Timestep;
+! Variáveis ambientais externas
+  Output:Variable,*,Site Outdoor Air Drybulb Temperature,Hourly;
+  Output:Variable,*,Site Outdoor Air Wetbulb Temperature,Hourly;
+  Output:Variable,*,Site Outdoor Air Relative Humidity,Hourly;
+  Output:Variable,*,Site Direct Solar Radiation Rate per Area,Hourly;
+  Output:Variable,*,Site Diffuse Solar Radiation Rate per Area,Hourly;
+
+! Temperatura e umidade da zona
   Output:Variable,*,Zone Mean Air Temperature,Timestep;
   Output:Variable,*,Zone Air Relative Humidity,Timestep;
   Output:Variable,*,Zone Thermostat Cooling Setpoint Temperature,Timestep;
+  Output:Variable,*,Zone Mean Radiant Temperature,Timestep;
+  Output:Variable,*,Zone Air Heat Balance Surface Convection Rate,Timestep;
+
+! Energia de condicionamento
   Output:Variable,*,Zone Ideal Loads Zone Total Cooling Energy,Timestep;
   Output:Variable,*,Zone Ideal Loads Zone Total Heating Energy,Timestep;
   Output:Variable,*,Zone Ideal Loads Supply Air Total Cooling Energy,Timestep;
   Output:Variable,*,Zone Ideal Loads Supply Air Total Heating Energy,Timestep;
+
+! Temperatura de superfícies - para análise de gradiente térmico
+! Parede com JANELAS (Esquerda - X=0) - Regiões 1, 3, 5
+  Output:Variable,Wall_Left_Windows,Surface Inside Face Temperature,Timestep;
+  Output:Variable,Wall_Left_Windows,Surface Outside Face Temperature,Timestep;
+  Output:Variable,Wall_Left_Windows,Surface Inside Face Convection Heat Transfer Coefficient,Timestep;
+
+! Parede com PORTA (Direita - X=7.06) - Regiões 2, 4, 6
+  Output:Variable,Wall_Right_Door,Surface Inside Face Temperature,Timestep;
+  Output:Variable,Wall_Right_Door,Surface Outside Face Temperature,Timestep;
+
+! Parede FRONTAL com Lousa (Y=0) - Regiões 1, 2
+  Output:Variable,Wall_Front_Blackboard,Surface Inside Face Temperature,Timestep;
+  Output:Variable,Wall_Front_Blackboard,Surface Outside Face Temperature,Timestep;
+
+! Parede FUNDO com ACs (Y=9.39) - Regiões 5, 6
+  Output:Variable,Wall_Back_AC,Surface Inside Face Temperature,Timestep;
+  Output:Variable,Wall_Back_AC,Surface Outside Face Temperature,Timestep;
+
+! Janelas - fluxo de calor e temperatura
+  Output:Variable,Window_1_Left_Front,Surface Inside Face Temperature,Timestep;
+  Output:Variable,Window_2_Left_Center,Surface Inside Face Temperature,Timestep;
+  Output:Variable,Window_3_Left_Back1,Surface Inside Face Temperature,Timestep;
+  Output:Variable,Window_4_Left_Back2,Surface Inside Face Temperature,Timestep;
+  Output:Variable,*,Surface Window Transmitted Solar Radiation Rate,Timestep;
+  Output:Variable,*,Surface Window Heat Gain Rate,Timestep;
+  Output:Variable,*,Surface Window Heat Loss Rate,Timestep;
+
+! Teto e piso
+  Output:Variable,Roof_Lab,Surface Inside Face Temperature,Timestep;
+  Output:Variable,Floor_Lab,Surface Inside Face Temperature,Timestep;
 
 !-   ===========  ALL OBJECTS IN CLASS: OUTPUT:METER ===========
 
@@ -716,6 +768,21 @@
 !-   ===========  ALL OBJECTS IN CLASS: OUTPUTCONTROL:TABLE:STYLE ===========
 
   OutputControl:Table:Style,
-    HTML;                    !- Column Separator
+    HTML,                    !- Column Separator
+    JtoKWH;                  !- Unit Conversion
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUT:SQLITE ===========
+
+  Output:SQLite,
+    SimpleAndTabular;        !- Option Type
+
+!-   ===========  ALL OBJECTS IN CLASS: OUTPUTCONTROL:FILES ===========
+
+  OutputControl:Files,
+    Yes,                     !- Output CSV
+    Yes,                     !- Output MTR
+    Yes,                     !- Output ESO
+    Yes,                     !- Output EIO
+    Yes;                     !- Output Tabular
 
 !-   ===========  END ===========
