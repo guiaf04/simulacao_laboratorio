@@ -178,7 +178,7 @@ def main():
     # Caminhos dos arquivos
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     arquivo_idf = os.path.join(base_dir, "models", "laboratorio_arquitetura.idf")
-    arquivo_epw = os.path.join(base_dir, "weather", "Fortaleza.epw")
+    arquivo_epw = os.path.join(base_dir, "weather", "Quixada_UFC.epw")
     diretorio_saida = os.path.join(base_dir, "results", f"sim_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
     
     # Executar simulação
