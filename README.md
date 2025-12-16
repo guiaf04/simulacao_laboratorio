@@ -22,13 +22,35 @@ Este projeto contém os arquivos e scripts para realizar a simulação térmica 
 
 ---
 
+## 🔬 Modelos de Simulação Disponíveis
+
+### 1. `laboratorio_arquitetura.idf` - Modelo Básico
+- **Zona única** para análise geral do laboratório
+- Temperatura média do ambiente
+- Ideal para análises rápidas e calibração geral
+
+### 2. `laboratorio_6zonas.idf` - Análise de Gradiente Térmico ⭐ **RECOMENDADO**
+- **Análise detalhada** de distribuição espacial de temperatura
+- Outputs de temperatura de superfícies em 6 regiões conceituais:
+  - **Região 1** (Frente-Esquerda): Próximo janela 1 + lousa
+  - **Região 2** (Frente-Direita): Próximo porta + lousa  
+  - **Região 3** (Centro-Esquerda): Próximo janela 2
+  - **Região 4** (Centro-Direita): Centro da sala
+  - **Região 5** (Fundo-Esquerda): Próximo janelas 3,4 + ACs
+  - **Região 6** (Fundo-Direita): Próximo ACs
+- **Inclui análise automática** com script Python
+- Permite entender influência de janelas, porta e ACs em diferentes partes da sala
+
+---
+
 ## 📁 Estrutura do Projeto
 
 ```
 simulacao_laboratorio/
 ├── models/                                  # Modelos de simulação
-│   ├── laboratorio_arquitetura.idf          # ✅ Modelo principal (EnergyPlus 25.1)
-│   └── laboratorio_arquitetura_backup.idf   # 📦 Backup da versão original
+│   ├── laboratorio_arquitetura.idf          # ✅ Modelo básico (1 zona)
+│   ├── laboratorio_6zonas.idf               # ⭐ Análise de gradiente térmico
+│   └── laboratorio_arquitetura_backup.idf   # 📦 Backup
 ├── weather/                                 # Arquivos de clima
 │   ├── README_CLIMA.md                      # Instruções para obter arquivo EPW
 │   └── Fortaleza.epw                        # Arquivo de clima (baixar)
@@ -57,12 +79,19 @@ python3 scripts/baixar_clima_fortaleza.py
 
 ### Passo 2: Executar Simulação
 
+**Modelo Básico (1 zona):**
 ```bash
 python3 scripts/executar_simulacao.py
 ```
 
+**Modelo de Análise de Gradiente Térmico (6 regiões) ⭐:**
+```bash
+energyplus -w weather/Fortaleza.epw -d results/sim_6zonas models/laboratorio_6zonas.idf
+```
+
 ### Passo 3: Analisar Resultados
 
+**Modelo Básico:**
 ```bash
 # Instalar dependências (apenas primeira vez)
 pip install pandas matplotlib
@@ -70,6 +99,18 @@ pip install pandas matplotlib
 # Executar análise
 python3 scripts/analisar_resultados.py
 ```
+
+**Modelo de 6 Regiões ⭐ (RECOMENDADO):**
+```bash
+# Análise automática com visualização de gradiente térmico
+python3 scripts/analisar_6regioes.py
+```
+
+Este script gera:
+- 📊 Tabela de temperatura média por superfície
+- ☀️ Análise de ganho de calor solar por janela
+- 📈 Gráfico de distribuição de temperatura ao longo do dia
+- 🔍 Comparação de gradiente térmico entre regiões
 
 ### Passo 4: Visualizar no OpenStudio (Opcional)
 

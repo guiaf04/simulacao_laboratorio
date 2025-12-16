@@ -25,7 +25,7 @@
 |-----------|-------|
 | Largura | 1.55 m |
 | Altura | 1.17 m |
-| Peitoril (do chão) | 1.00 m (estimado) |
+| Peitoril (do chão) | 0.90 m |
 
 ### Posicionamento na parede lateral direita (profundidade 9.39m):
 | Janela | Posição Y inicial | Posição Y final |
@@ -182,14 +182,24 @@ Funcionamento: 07:00-18:00 (Seg-Sex)
 
 ## ⚠️ DADOS AINDA PENDENTES
 
-- [ ] Altura exata do peitoril das janelas
-- [ ] Posição dos ar-condicionados na parede
-- [ ] Temperatura do termostato
-- [ ] Ocupação típica (número de pessoas)
-- [ ] Horários de ocupação detalhados
-- [ ] Potência exata das lâmpadas (10W ou 20W)
-- [ ] Quantidade e tipo de equipamentos (computadores, projetores)
-- [ ] Existência de cortinas/persianas
+- [X] Altura exata do peitoril das janelas
+- [X] Posição dos ar-condicionados na parede
+    - 2.25 m do chão
+- [X] Temperatura do termostato
+    - Tipicamente 24 graus
+- [x] Ocupação típica (número de pessoas)
+    - 20 pessoas das 8:00 as 12:00
+    - 15 pessoas das 12:00 as 13:30
+    - 30 pessoas das 13:30h as 17:30h
+    - 5 pessoas de 17:30h as 20:00h
+- [X] Horários de ocupação detalhados
+- [X] Potência exata das lâmpadas (10W ou 20W)
+    - 10W
+- [X] Quantidade e tipo de equipamentos (computadores, projetores)
+    - 1 projetor 3600 lumens 300W
+    - Notebooks em cerca de 75% da ocupação de pessoas
+- [X] Existência de cortinas/persianas
+    - Não possui
 - [ ] Fotos do laboratório
 
 ---
