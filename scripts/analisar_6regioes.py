@@ -81,6 +81,127 @@ def analyze_surface_temperatures(df):
     return results_df if results else None
 
 
+def analyze_regions_temperature(df):
+    """Analisa temperatura inferida para cada uma das 6 regiões conceituais"""
+    print("\n📍 ANÁLISE DE TEMPERATURA POR REGIÃO CONCEITUAL")
+    print("=" * 70)
+    print("Inferência baseada em temperatura de superfícies adjacentes")
+    print()
+    
+    # Buscar nomes reais das colunas
+    temp_cols = [col for col in df.columns if 'Surface Inside Face Temperature' in col]
+    window_heat_cols = [col for col in df.columns if 'Surface Window Heat Gain Rate' in col]
+    
+    # Definir mapeamento de superfícies para regiões (usando nomes reais)
+    region_surfaces = {
+        'Região 1 - Frente Esquerda\n(Próx. Janela 1 + Lousa)': [
+            'WALL_LEFT_WINDOWS:Surface Inside Face Temperature [C](TimeStep)',
+            'WALL_FRONT_BLACKBOARD:Surface Inside Face Temperature [C](TimeStep)',
+            'WINDOW_1:Surface Window Heat Gain Rate [W](TimeStep)'  # Indicador de calor solar
+        ],
+        'Região 2 - Frente Direita\n(Próx. Porta + Lousa)': [
+            'WALL_RIGHT_DOOR:Surface Inside Face Temperature [C](TimeStep)',
+            'WALL_FRONT_BLACKBOARD:Surface Inside Face Temperature [C](TimeStep)'
+        ],
+        'Região 3 - Centro Esquerda\n(Próx. Janela 2)': [
+            'WALL_LEFT_WINDOWS:Surface Inside Face Temperature [C](TimeStep)',
+            'WINDOW_2:Surface Window Heat Gain Rate [W](TimeStep)'
+        ],
+        'Região 4 - Centro Direita\n(Centro da sala)': [
+            'WALL_RIGHT_DOOR:Surface Inside Face Temperature [C](TimeStep)'
+        ],
+        'Região 5 - Fundo Esquerda\n(Próx. Janelas 3,4 + ACs)': [
+            'WALL_LEFT_WINDOWS:Surface Inside Face Temperature [C](TimeStep)',
+            'WALL_BACK_AC:Surface Inside Face Temperature [C](TimeStep)',
+            'WINDOW_3:Surface Window Heat Gain Rate [W](TimeStep)',
+            'WINDOW_4:Surface Window Heat Gain Rate [W](TimeStep)'
+        ],
+        'Região 6 - Fundo Direita\n(Próx. ACs)': [
+            'WALL_RIGHT_DOOR:Surface Inside Face Temperature [C](TimeStep)',
+            'WALL_BACK_AC:Surface Inside Face Temperature [C](TimeStep)'
+        ]
+    }
+    
+    results = []
+    
+    for region_name, surface_list in region_surfaces.items():
+        # Coletar temperaturas das superfícies desta região
+        region_temps = []
+        available_surfaces = []
+        solar_heat = 0
+        
+        for surface in surface_list:
+            if surface in df.columns:
+                data = df[surface].dropna()
+                if len(data) > 0:
+                    # Se for temperatura, usar diretamente
+                    if 'Temperature' in surface:
+                        region_temps.extend(data.values)
+                        available_surfaces.append(surface.split(':')[0])
+                    # Se for ganho de calor solar, apenas contar (não é temperatura)
+                    elif 'Heat Gain' in surface:
+                        solar_heat += data.mean()
+                        available_surfaces.append(surface.split(':')[0] + ' (solar)')
+        
+        if region_temps:
+            region_temps_series = pd.Series(region_temps)
+            
+            results.append({
+                'Região': region_name,
+                'Temp. Média (°C)': region_temps_series.mean(),
+                'Temp. Mín (°C)': region_temps_series.min(),
+                'Temp. Máx (°C)': region_temps_series.max(),
+                'Desvio Padrão (°C)': region_temps_series.std(),
+                'Superfícies': len(available_surfaces),
+                'Ganho Solar (W)': solar_heat
+            })
+    
+    if results:
+        results_df = pd.DataFrame(results)
+        
+        # Imprimir resultados formatados
+        for idx, row in results_df.iterrows():
+            print(f"{'─' * 70}")
+            print(f"{row['Região']}")
+            print(f"{'─' * 70}")
+            print(f"  🌡️  Temperatura Média:    {row['Temp. Média (°C)']:.2f}°C")
+            print(f"  ❄️  Temperatura Mínima:   {row['Temp. Mín (°C)']:.2f}°C")
+            print(f"  🔥 Temperatura Máxima:   {row['Temp. Máx (°C)']:.2f}°C")
+            print(f"  📊 Desvio Padrão:        {row['Desvio Padrão (°C)']:.2f}°C")
+            print(f"  📐 Superfícies analisadas: {row['Superfícies']}")
+            if row.get('Ganho Solar (W)', 0) > 0:
+                print(f"  ☀️  Ganho Solar Médio:   {row['Ganho Solar (W)']:.1f} W")
+            
+            # Análise de conforto térmico (ASHRAE 55)
+            temp_media = row['Temp. Média (°C)']
+            if 20 <= temp_media <= 24:
+                conforto = "✅ CONFORTÁVEL (ideal para trabalho)"
+            elif 24 < temp_media <= 26:
+                conforto = "⚠️  LEVEMENTE QUENTE (aceitável)"
+            elif 26 < temp_media <= 28:
+                conforto = "🔶 QUENTE (desconforto leve)"
+            elif temp_media > 28:
+                conforto = "🔴 MUITO QUENTE (desconforto significativo)"
+            else:
+                conforto = "🔵 FRIO (necessita aquecimento)"
+            
+            print(f"  🎯 Conforto Térmico:     {conforto}")
+            print()
+        
+        # Ranking de regiões por temperatura
+        print(f"{'═' * 70}")
+        print("🏆 RANKING DE REGIÕES (Mais Quente → Mais Fria)")
+        print(f"{'═' * 70}")
+        results_sorted = results_df.sort_values('Temp. Média (°C)', ascending=False)
+        for rank, (idx, row) in enumerate(results_sorted.iterrows(), 1):
+            region_short = row['Região'].split('\n')[0]
+            print(f"  {rank}º. {region_short}: {row['Temp. Média (°C)']:.2f}°C")
+        
+        return results_df
+    
+    return None
+
+
 def analyze_window_heat_gain(df):
     """Analisa ganho de calor pelas janelas"""
     print("\n☀️  ANÁLISE DE GANHO DE CALOR SOLAR PELAS JANELAS")
@@ -194,6 +315,10 @@ def generate_report():
     
     # Análises
     surface_temps = analyze_surface_temperatures(df)
+    
+    # ⭐ NOVA ANÁLISE: Temperatura por região com recomendações
+    regions_analysis = analyze_regions_temperature(df)
+    
     window_heat = analyze_window_heat_gain(df)
     analyze_thermal_gradient(df)
     
@@ -201,9 +326,30 @@ def generate_report():
     zone_temp_cols = [c for c in df.columns if 'Zone Mean Air Temperature' in c]
     if zone_temp_cols:
         zone_temp = df[zone_temp_cols[0]].dropna()
-        print(f"\n🌡️  Temperatura Média da Zona: {zone_temp.mean():.2f}°C")
+        print(f"\n🌡️  Temperatura Média da Zona (Geral): {zone_temp.mean():.2f}°C")
         print(f"   Variação: {zone_temp.min():.2f}°C a {zone_temp.max():.2f}°C")
     
+    # Recomendações de posicionamento
+    print("\n" + "="*70)
+    print("💡 RECOMENDAÇÕES PARA POSICIONAMENTO DE PESSOAS")
+    print("="*70)
+    
+    if regions_analysis is not None:
+        # Encontrar regiões mais confortáveis
+        regions_sorted = regions_analysis.sort_values('Temp. Média (°C)')
+        
+        print("\n🎯 ZONAS MAIS CONFORTÁVEIS (prioritárias para ocupação):")
+        for idx, row in regions_sorted.head(3).iterrows():
+            region_name = row['Região'].split('\n')[0]
+            temp = row['Temp. Média (°C)']
+            print(f"   • {region_name}: {temp:.1f}°C")
+        
+        print("\n⚠️  ZONAS MAIS QUENTES (evitar ocupação prolongada):")
+        for idx, row in regions_sorted.tail(2).iterrows():
+            region_name = row['Região'].split('\n')[0]
+            temp = row['Temp. Média (°C)']
+            print(f"   • {region_name}: {temp:.1f}°C")
+        
     # Gráfico
     try:
         plot_hourly_temperatures(df)
