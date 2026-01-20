@@ -26,14 +26,23 @@ class ResultsExtractor:
         """
         results = {}
         
-        # Consumo anual de resfriamento
+        # Consumos energéticos
         results['consumo_anual_resfriamento'] = self._extract_cooling_consumption()
+        results['consumo_anual_aquecimento'] = self._extract_heating_consumption()
+        results['consumo_eletricidade_total'] = self._extract_electricity_total()
         
-        # Carga de pico de resfriamento
+        # Cargas térmicas
         results['carga_pico_resfriamento'] = self._extract_peak_cooling()
         
-        # Horas de desconforto
+        # Conforto térmico
         results['horas_desconforto'] = self._extract_discomfort_hours()
+        
+        # Ganhos de calor
+        results['ganho_solar_transmitido'] = self._extract_solar_gain()
+        results['ganho_calor_janelas'] = self._extract_window_heat_gain()
+        
+        # Temperatura média anual
+        results['temperatura_media_anual'] = self._extract_mean_temperature()
         
         # Temperatura das 6 regiões teóricas
         regional_temps = self._extract_regional_temperatures()
@@ -156,6 +165,172 @@ class ResultsExtractor:
             print(f"Erro ao extrair desconforto em {self.output_dir}: {e}")
             return np.nan
     
+    def _extract_heating_consumption(self) -> float:
+        """
+        Extrai consumo anual de energia para aquecimento (kWh/ano).
+        
+        Lê do eplusout.csv a coluna de energia de aquecimento.
+        Usa Zone Ideal Loads Zone Total Heating Energy [J].
+        """
+        csv_file = self.output_dir / 'eplusout.csv'
+        
+        if not csv_file.exists():
+            return np.nan
+        
+        try:
+            df = pd.read_csv(csv_file)
+            
+            # Procura por colunas de aquecimento
+            heating_columns = [col for col in df.columns if 
+                             any(x in col.lower() for x in 
+                                 ['zone ideal loads zone total heating energy',
+                                  'zone ideal loads supply air total heating energy'])]
+            
+            if not heating_columns:
+                return 0.0  # Sem aquecimento
+            
+            # Soma consumo total (converte J para kWh)
+            total_j = df[heating_columns].sum().sum()
+            total_kwh = total_j / 3.6e6
+            
+            return float(total_kwh)
+        
+        except Exception as e:
+            print(f"Erro ao extrair aquecimento em {self.output_dir}: {e}")
+            return np.nan
+    
+    def _extract_electricity_total(self) -> float:
+        """
+        Extrai consumo total de eletricidade da edificação (kWh/ano).
+        
+        Inclui iluminação, equipamentos e outros consumos elétricos.
+        Usa Electricity:Facility [J].
+        """
+        csv_file = self.output_dir / 'eplusout.csv'
+        
+        if not csv_file.exists():
+            return np.nan
+        
+        try:
+            df = pd.read_csv(csv_file)
+            
+            # Procura por coluna de eletricidade total
+            elec_columns = [col for col in df.columns if 
+                           'Electricity:Facility' in col]
+            
+            if not elec_columns:
+                return np.nan
+            
+            # Soma consumo total (converte J para kWh)
+            total_j = df[elec_columns].sum().sum()
+            total_kwh = total_j / 3.6e6
+            
+            return float(total_kwh)
+        
+        except Exception as e:
+            print(f"Erro ao extrair eletricidade total em {self.output_dir}: {e}")
+            return np.nan
+    
+    def _extract_solar_gain(self) -> float:
+        """
+        Extrai radiação solar transmitida através das janelas (kWh/ano).
+        
+        Lê do eplusout.csv as colunas de radiação solar transmitida.
+        Usa 'Surface Window Transmitted Solar Radiation Rate [W]'.
+        """
+        csv_file = self.output_dir / 'eplusout.csv'
+        
+        if not csv_file.exists():
+            return np.nan
+        
+        try:
+            df = pd.read_csv(csv_file)
+            
+            # Procura por colunas de radiação solar transmitida pelas janelas
+            solar_columns = [col for col in df.columns if 
+                           'Surface Window Transmitted Solar Radiation Rate' in col]
+            
+            if not solar_columns:
+                return np.nan
+            
+            # Timestep de 10 minutos = 1/6 hora
+            timestep_hours = 1.0 / 6.0
+            
+            # Calcula energia em Wh e depois converte para kWh
+            total_wh = df[solar_columns].sum().sum() * timestep_hours
+            total_kwh = total_wh / 1000.0
+            
+            return float(total_kwh)
+        
+        except Exception as e:
+            print(f"Erro ao extrair ganho solar em {self.output_dir}: {e}")
+            return np.nan
+    
+    def _extract_window_heat_gain(self) -> float:
+        """
+        Extrai ganho de calor total pelas janelas (kWh/ano).
+        
+        Inclui radiação solar + condução térmica.
+        Usa 'Surface Window Heat Gain Rate [W]'.
+        """
+        csv_file = self.output_dir / 'eplusout.csv'
+        
+        if not csv_file.exists():
+            return np.nan
+        
+        try:
+            df = pd.read_csv(csv_file)
+            
+            # Procura por colunas de ganho de calor total das janelas
+            heat_gain_columns = [col for col in df.columns if 
+                               'Surface Window Heat Gain Rate' in col]
+            
+            if not heat_gain_columns:
+                return np.nan
+            
+            # Timestep de 10 minutos = 1/6 hora
+            timestep_hours = 1.0 / 6.0
+            
+            # Calcula energia em Wh e depois converte para kWh
+            total_wh = df[heat_gain_columns].sum().sum() * timestep_hours
+            total_kwh = total_wh / 1000.0
+            
+            return float(total_kwh)
+        
+        except Exception as e:
+            print(f"Erro ao extrair ganho calor janelas em {self.output_dir}: {e}")
+            return np.nan
+    
+    def _extract_mean_temperature(self) -> float:
+        """
+        Extrai temperatura média anual da zona (°C).
+        
+        Usa 'Zone Mean Air Temperature [C]'.
+        """
+        csv_file = self.output_dir / 'eplusout.csv'
+        
+        if not csv_file.exists():
+            return np.nan
+        
+        try:
+            df = pd.read_csv(csv_file)
+            
+            # Procura por coluna de temperatura média da zona
+            temp_col = [col for col in df.columns if 
+                       'Zone Mean Air Temperature' in col]
+            
+            if not temp_col:
+                return np.nan
+            
+            # Calcula média anual
+            mean_temp = df[temp_col[0]].mean()
+            
+            return float(mean_temp)
+        
+        except Exception as e:
+            print(f"Erro ao extrair temperatura média em {self.output_dir}: {e}")
+            return np.nan
+    
     def _extract_regional_temperatures(self) -> Dict[str, float]:
         """
         Extrai temperatura média de 6 regiões teóricas do laboratório.
@@ -207,24 +382,25 @@ class ResultsExtractor:
             solar_w3 = df[window3_solar[0]].mean() if window3_solar else 0
             solar_w4 = df[window4_solar[0]].mean() if window4_solar else 0
             
-            # Normaliza radiação para incremento de temperatura (aprox: 100W ~ +0.5°C)
+            # Normaliza radiação para incremento de temperatura (aprox: 200W ~ +0.5°C)
             # Baseado em ganho térmico típico por radiação solar direta
-            delta_t_w1 = solar_w1 / 200.0  # °C
-            delta_t_w2 = solar_w2 / 200.0
-            delta_t_w3 = solar_w3 / 200.0
-            delta_t_w4 = solar_w4 / 200.0
+            delta_t_w1 = solar_w1 / 400.0  # °C
+            delta_t_w2 = solar_w2 / 400.0
+            delta_t_w3 = solar_w3 / 400.0
+            delta_t_w4 = solar_w4 / 400.0
             
             # Calcula temperatura regional combinando:
             # 1. Temperatura da zona (base)
-            # 2. Temperatura das superfícies adjacentes
+            # 2. Fração da diferença para superfícies adjacentes (reduzido)
             # 3. Incremento por radiação solar nas janelas
+            # NOTA: Fatores reduzidos para evitar temperaturas irrealistas
             results = {
-                'temp_regiao_1': zone_temp + 0.4 * (t_left - zone_temp) + 0.3 * (t_front - zone_temp) + delta_t_w1,  # Frente-Esquerda (janela 1)
-                'temp_regiao_2': zone_temp + 0.5 * (t_right - zone_temp) + 0.3 * (t_front - zone_temp),              # Frente-Direita (porta)
-                'temp_regiao_3': zone_temp + 0.4 * (t_left - zone_temp) + delta_t_w2,                                # Centro-Esquerda (janela 2)
-                'temp_regiao_4': zone_temp + 0.1 * (t_front - zone_temp) + 0.1 * (t_back - zone_temp),               # Centro (longe janelas)
-                'temp_regiao_5': zone_temp + 0.3 * (t_back - zone_temp) + 0.3 * (t_left - zone_temp) + 0.5 * (delta_t_w3 + delta_t_w4),  # Fundo-Esquerda (janelas 3,4)
-                'temp_regiao_6': zone_temp + 0.5 * (t_back - zone_temp) + 0.2 * (t_right - zone_temp),               # Fundo-Direita (ACs)
+                'temp_regiao_1': zone_temp + 0.15 * (t_left - zone_temp) + 0.10 * (t_front - zone_temp) + delta_t_w1,  # Frente-Esquerda (janela 1)
+                'temp_regiao_2': zone_temp + 0.20 * (t_right - zone_temp) + 0.10 * (t_front - zone_temp),              # Frente-Direita (porta)
+                'temp_regiao_3': zone_temp + 0.15 * (t_left - zone_temp) + delta_t_w2,                                # Centro-Esquerda (janela 2)
+                'temp_regiao_4': zone_temp + 0.05 * (t_front - zone_temp) + 0.05 * (t_back - zone_temp),               # Centro (longe janelas)
+                'temp_regiao_5': zone_temp + 0.10 * (t_back - zone_temp) + 0.10 * (t_left - zone_temp) + 0.3 * (delta_t_w3 + delta_t_w4),  # Fundo-Esquerda (janelas 3,4)
+                'temp_regiao_6': zone_temp + 0.20 * (t_back - zone_temp) + 0.10 * (t_right - zone_temp),               # Fundo-Direita (ACs)
             }
             
             return {k: float(v) for k, v in results.items()}

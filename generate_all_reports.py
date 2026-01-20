@@ -163,8 +163,16 @@ def create_distribution_plots(data: pd.DataFrame, output_vars: List[str], save_d
     
     from scipy import stats
     
+    # Lista de variáveis importantes para plotar (mesmo sem índices de sensibilidade)
+    important_vars = ['carga_pico_resfriamento', 'consumo_anual_resfriamento', 
+                      'temperatura_media_anual', 'horas_desconforto']
+    
+    # Combina output_vars com variáveis importantes
+    all_vars = list(set(output_vars + important_vars))
+    vars_to_plot = [v for v in all_vars if v in data.columns and data[v].std() > 0]
+    
     # Criar figura com subplots para todas as variáveis
-    n_vars = len([v for v in output_vars if v in data.columns and data[v].std() > 0])
+    n_vars = len(vars_to_plot)
     
     if n_vars == 0:
         print("⚠️  Nenhuma variável com variância para plotar")
@@ -178,17 +186,17 @@ def create_distribution_plots(data: pd.DataFrame, output_vars: List[str], save_d
         'consumo_anual_resfriamento': 'Consumo Anual\n(kWh/ano)',
         'carga_pico_resfriamento': 'Carga Pico\n(kW)',
         'horas_desconforto': 'Horas Desconforto\n(horas)',
+        'temperatura_media_anual': 'Temperatura Média\n(°C)',
     }
     
     idx = 0
-    for output_var in output_vars:
+    for output_var in vars_to_plot:
         if output_var not in data.columns:
             continue
         
         values = data[output_var].dropna()
         
         if values.std() == 0:
-            print(f"⚠️  {output_var}: variância zero, pulando")
             continue
         
         ax = axes[idx]
@@ -342,6 +350,15 @@ def generate_text_report(data: pd.DataFrame, sensitivity_results: Dict,
     print(f"\n📊 ESTATÍSTICAS DESCRITIVAS")
     print("="*80)
     print(descriptive_stats.to_string())
+    
+    # Adiciona temperatura média se disponível
+    if 'temperatura_media_anual' in data.columns:
+        temp_media = data['temperatura_media_anual']
+        print(f"\n🌡️  TEMPERATURA MÉDIA GLOBAL:")
+        print(f"  Média:  {temp_media.mean():.2f}°C")
+        print(f"  Desvio: {temp_media.std():.2f}°C")
+        print(f"  Mínima: {temp_media.min():.2f}°C")
+        print(f"  Máxima: {temp_media.max():.2f}°C")
     
     print(f"\n\n🌡️  TEMPERATURAS REGIONAIS")
     print("="*80)

@@ -144,7 +144,19 @@ DEPENDENT_VARIABLES = {
         'output_var': 'Cooling:Electricity',
         'aggregation': 'sum',
         'unit': 'kWh/ano',
-        'description': 'Consumo anual de eletricidade para refrigeração'
+        'description': 'Energia de resfriamento (carga térmica removida pelo AC)'
+    },
+    'consumo_anual_aquecimento': {
+        'output_var': 'Heating:Energy',
+        'aggregation': 'sum',
+        'unit': 'kWh/ano',
+        'description': 'Energia de aquecimento (se houver)'
+    },
+    'consumo_eletricidade_total': {
+        'output_var': 'Electricity:Facility',
+        'aggregation': 'sum',
+        'unit': 'kWh/ano',
+        'description': 'Consumo elétrico total da edificação'
     },
     'carga_pico_resfriamento': {
         'output_var': 'Zone Air System Sensible Cooling Rate',
@@ -158,6 +170,24 @@ DEPENDENT_VARIABLES = {
         'threshold': 26.0,
         'unit': 'horas',
         'description': 'Horas acima de 26°C (AC insuficiente)'
+    },
+    'ganho_solar_transmitido': {
+        'output_var': 'Surface Window Transmitted Solar Radiation Rate',
+        'aggregation': 'sum',
+        'unit': 'kWh/ano',
+        'description': 'Radiação solar transmitida através das janelas'
+    },
+    'ganho_calor_janelas': {
+        'output_var': 'Surface Window Heat Gain Rate',
+        'aggregation': 'sum',
+        'unit': 'kWh/ano',
+        'description': 'Ganho de calor total pelas janelas (solar + condução)'
+    },
+    'temperatura_media_anual': {
+        'output_var': 'Zone Mean Air Temperature',
+        'aggregation': 'mean',
+        'unit': '°C',
+        'description': 'Temperatura média anual da zona'
     }
 }
 
