@@ -171,18 +171,74 @@ def executar_simulacao(arquivo_idf, arquivo_epw, diretorio_saida):
         traceback.print_exc()
         return False
 
+def gerenciar_pasta_latest(base_dir, tipo_simulacao):
+    """
+    Gerencia a pasta 'latest', renomeando a anterior com timestamp
+    """
+    dir_latest = os.path.join(base_dir, "results", f"sim_{tipo_simulacao}_latest")
+    
+    # Se já existe uma pasta latest, renomear com timestamp
+    if os.path.exists(dir_latest):
+        # Obter timestamp de modificação da pasta
+        timestamp_modificacao = os.path.getmtime(dir_latest)
+        data_modificacao = datetime.fromtimestamp(timestamp_modificacao)
+        timestamp_str = data_modificacao.strftime('%Y%m%d_%H%M%S')
+        
+        # Novo nome com timestamp
+        dir_antiga = os.path.join(base_dir, "results", f"sim_{tipo_simulacao}_{timestamp_str}")
+        
+        print(f"\n📦 Renomeando simulação anterior:")
+        print(f"   De: {os.path.basename(dir_latest)}")
+        print(f"   Para: {os.path.basename(dir_antiga)}")
+        
+        os.rename(dir_latest, dir_antiga)
+    
+    return dir_latest
+
 def main():
     """
     Função principal
     """
-    # Caminhos dos arquivos
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    arquivo_idf = os.path.join(base_dir, "models", "laboratorio_arquitetura.idf")
+    
+    print("=" * 70)
+    print("EXECUÇÃO DE SIMULAÇÃO - ENERGYPLUS")
+    print("Laboratório de Arquitetura - UFC Quixadá")
+    print("=" * 70)
+    
+    # Perguntar qual simulação executar
+    print("\nEscolha o tipo de simulação:")
+    print("  1. Simulação Geral (zona única)")
+    print("  2. Simulação 6 Zonas (análise de gradiente térmico)")
+    print()
+    
+    escolha = input("Digite sua escolha (1 ou 2): ").strip()
+    
+    if escolha == "1":
+        tipo_simulacao = "geral"
+        arquivo_idf = os.path.join(base_dir, "models", "laboratorio_arquitetura.idf")
+        print("\n✓ Simulação selecionada: GERAL (zona única)")
+    elif escolha == "2":
+        tipo_simulacao = "6zonas"
+        arquivo_idf = os.path.join(base_dir, "models", "laboratorio_6zonas.idf")
+        print("\n✓ Simulação selecionada: 6 ZONAS (gradiente térmico)")
+    else:
+        print("\n✗ Escolha inválida! Use 1 ou 2.")
+        sys.exit(1)
+    
+    # Arquivo EPW
     arquivo_epw = os.path.join(base_dir, "weather", "Quixada_UFC.epw")
-    diretorio_saida = os.path.join(base_dir, "results", f"sim_{datetime.now().strftime('%Y%m%d_%H%M%S')}")
+    
+    # Gerenciar pasta latest
+    diretorio_saida = gerenciar_pasta_latest(base_dir, tipo_simulacao)
     
     # Executar simulação
     sucesso = executar_simulacao(arquivo_idf, arquivo_epw, diretorio_saida)
+    
+    if sucesso:
+        print(f"\n✓ Resultados disponíveis em: sim_{tipo_simulacao}_latest")
+        print(f"\n💡 Para analisar os resultados, execute:")
+        print(f"   python3 scripts/analisar_resultados.py")
     
     sys.exit(0 if sucesso else 1)
 

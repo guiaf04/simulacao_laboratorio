@@ -60,6 +60,22 @@
     -3.0,                    !- Time Zone {hr}
     21.0;                    !- Elevation {m}
 
+!-   ===========  ALL OBJECTS IN CLASS: AIRFLOWNETWORK:SIMULATIONCONTROL ===========
+
+  AirflowNetwork:SimulationControl,
+    AirflowNetwork_Control,  !- Name
+    MultizoneWithoutDistribution, !- AirflowNetwork Control
+    SurfaceAverageCalculation, !- Wind Pressure Coefficient Type
+    OpeningHeight,           !- Height Selection for Local Wind Pressure Calculation
+    LOWRISE,                 !- Building Type
+    1000,                    !- Maximum Number of Iterations {dimensionless}
+    LinearInitializationMethod, !- Initialization Type
+    0.0001,                  !- Relative Airflow Convergence Tolerance {dimensionless}
+    0.0001,                  !- Absolute Airflow Convergence Tolerance {kg/s}
+    -0.5,                    !- Convergence Acceleration Limit {dimensionless}
+    0.0,                     !- Azimuth Angle of Long Axis of Building {deg}
+    0.5;                     !- Ratio of Building Width Along Short Axis to Width Along Long Axis
+
 !-   ===========  ALL OBJECTS IN CLASS: SIZINGPERIOD:DESIGNDAY ===========
 
   SizingPeriod:DesignDay,
@@ -220,6 +236,31 @@
     Through: 12/31,          !- Field 1
     For: AllDays,            !- Field 2
     Until: 24:00,24.0;       !- Field 3
+
+! Porta abre ~5 minutos nos intervalos entre aulas e brevemente para entrada/saída
+! 08:00-08:10 (entrada manhã), 10:00-10:10 (intervalo manhã), 12:00-12:10 (saída/almoço)
+! 13:20-13:40 (entrada tarde), 15:00-15:10 (intervalo tarde), 17:20-17:40 (saída)
+! Tempos arredondados para timestep de 10 minutos (Timestep,6)
+  Schedule:Compact,
+    Door_Opening_Schedule,   !- Name
+    Fraction,                !- Schedule Type Limits Name
+    Through: 12/31,          !- Field 1
+    For: Weekdays,           !- Field 2
+    Until: 08:00,0.0,        !- Porta fechada
+    Until: 08:10,1.0,        !- Entrada manhã
+    Until: 10:00,0.0,        !- Fechada
+    Until: 10:10,1.0,        !- Intervalo manhã
+    Until: 12:00,0.0,        !- Fechada
+    Until: 12:10,1.0,        !- Saída/Almoço
+    Until: 13:20,0.0,        !- Fechada
+    Until: 13:40,1.0,        !- Entrada tarde
+    Until: 15:00,0.0,        !- Fechada
+    Until: 15:10,1.0,        !- Intervalo tarde
+    Until: 17:20,0.0,        !- Fechada
+    Until: 17:40,1.0,        !- Saída
+    Until: 24:00,0.0,        !- Fechada
+    For: AllOtherDays,       !- Field 17
+    Until: 24:00,0.0;        !- Porta fechada
 
   Schedule:Compact,
     ActivityLevel_Seated,    !- Name
@@ -784,5 +825,70 @@
     Yes,                     !- Output ESO
     Yes,                     !- Output EIO
     Yes;                     !- Output Tabular
+
+!-   ===========  ALL OBJECTS IN CLASS: AIRFLOWNETWORK:MULTIZONE:ZONE ===========
+
+  AirflowNetwork:MultiZone:Zone,
+    Laboratorio_Zone,        !- Zone Name
+    NoVent,                  !- Ventilation Control Mode (sem controle automático, apenas pela agenda)
+    ,                        !- Ventilation Control Zone Temperature Setpoint Schedule Name
+    1.0,                     !- Minimum Venting Open Factor {dimensionless}
+    0.0,                     !- Indoor and Outdoor Temperature Difference Lower Limit For Maximum Venting Open Factor {deltaC}
+    100.0,                   !- Indoor and Outdoor Temperature Difference Upper Limit For Minimum Venting Open Factor {deltaC}
+    0.0,                     !- Indoor and Outdoor Enthalpy Difference Lower Limit For Maximum Venting Open Factor {deltaJ/kg}
+    300000.0,                !- Indoor and Outdoor Enthalpy Difference Upper Limit For Minimum Venting Open Factor {deltaJ/kg}
+    Always_On;               !- Venting Availability Schedule Name
+
+!-   ===========  ALL OBJECTS IN CLASS: AIRFLOWNETWORK:MULTIZONE:SURFACE ===========
+
+! Define Door_Main como superfície com fluxo de ar controlado pela agenda Door_Opening_Schedule
+  AirflowNetwork:MultiZone:Surface,
+    Door_Main,               !- Surface Name
+    Door_Opening,            !- Leakage Component Name
+    ,                        !- External Node Name
+    1.0,                     !- Window/Door Opening Factor, or Crack Factor {dimensionless}
+    ,                        !- Ventilation Control Mode
+    Door_Opening_Schedule;   !- Venting Schedule Name
+
+! Infiltração através das paredes externas
+  AirflowNetwork:MultiZone:Surface,
+    Wall_Left_Windows,       !- Surface Name
+    Wall_Crack,              !- Leakage Component Name
+    ,                        !- External Node Name
+    1.0;                     !- Window/Door Opening Factor, or Crack Factor {dimensionless}
+
+!-   ===========  ALL OBJECTS IN CLASS: AIRFLOWNETWORK:MULTIZONE:COMPONENT:DETAILEDOPENING ===========
+
+! Porta dupla: 1.195m largura × 2.10m altura = 2.5095 m²
+  AirflowNetwork:MultiZone:Component:DetailedOpening,
+    Door_Opening,            !- Name
+    0.65,                    !- Air Mass Flow Coefficient When Opening is Closed {kg/s-m}
+    0.65,                    !- Air Mass Flow Exponent When Opening is Closed {dimensionless}
+    NonPivoted,              !- Type of Rectangular Large Vertical Opening (LVO)
+    1.0,                     !- Extra Crack Length or Height of Pivoting Axis {m}
+    2,                       !- Number of Sets of Opening Factor Data
+    0.0,                     !- Opening Factor 1 {dimensionless}
+    0.5,                     !- Discharge Coefficient for Opening Factor 1 {dimensionless}
+    0.0,                     !- Width Factor for Opening Factor 1 {dimensionless}
+    1.0,                     !- Height Factor for Opening Factor 1 {dimensionless}
+    0.0,                     !- Start Height Factor for Opening Factor 1 {dimensionless}
+    1.0,                     !- Opening Factor 2 {dimensionless}
+    0.6,                     !- Discharge Coefficient for Opening Factor 2 {dimensionless}
+    1.0,                     !- Width Factor for Opening Factor 2 {dimensionless}
+    1.0,                     !- Height Factor for Opening Factor 2 {dimensionless}
+    0.0;                     !- Start Height Factor for Opening Factor 2 {dimensionless}
+
+!-   ===========  ALL OBJECTS IN CLASS: AIRFLOWNETWORK:MULTIZONE:SURFACE:CRACK ===========
+
+! Infiltração básica através de frestas nas paredes
+  AirflowNetwork:MultiZone:Surface:Crack,
+    Wall_Crack,              !- Name
+    0.001,                   !- Air Mass Flow Coefficient at Reference Conditions {kg/s}
+    0.65;                    !- Air Mass Flow Exponent {dimensionless}
+
+! Variáveis de saída AirflowNetwork
+  Output:Variable,*,AFN Zone Infiltration Volume,Timestep;
+  Output:Variable,*,AFN Zone Infiltration Air Change Rate,Timestep;
+  Output:Variable,*,AFN Surface Venting Window or Door Opening Factor,Timestep;
 
 !-   ===========  END ===========

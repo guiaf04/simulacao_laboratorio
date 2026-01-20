@@ -1,0 +1,24 @@
+# Dependências para Análise de Sensibilidade
+# Projeto: Simulação Térmica - Laboratório UFC Quixadá
+
+# Manipulação de dados
+numpy>=1.21.0
+pandas>=1.3.0
+scipy>=1.7.0
+
+# Machine Learning (regressão)
+scikit-learn>=1.0.0
+
+# Visualização
+matplotlib>=3.4.0
+seaborn>=0.11.0
+
+# Utilitários
+tqdm>=4.62.0  # Barra de progresso
+
+# Opcional: Análise estatística avançada
+# statsmodels>=0.13.0
+
+# Opcional: Jupyter para análise interativa
+# jupyter>=1.0.0
+# ipykernel>=6.0.0
