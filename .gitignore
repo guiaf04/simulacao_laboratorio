@@ -1,6 +1,5 @@
 # EnergyPlus - Arquivos de simulação
 results/
-*.csv
 *.htm
 *.html
 *.eio
