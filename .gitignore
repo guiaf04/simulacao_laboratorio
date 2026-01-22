@@ -45,7 +45,6 @@ build/
 # OpenStudio
 openstudio/
 models/lab/
-*.osm
 *.osc
 
 # Arquivos de clima (podem ser baixados novamente)
