@@ -78,15 +78,30 @@ if all([wall_front, wall_back, wall_left, wall_right]):
     t_left = df[wall_left[0]]
     t_right = df[wall_right[0]]
     
-    # Temperatura radiante por região (combinação das superfícies adjacentes)
-    data_export['Temp_Radiante_Regiao1_C'] = 0.5 * t_left + 0.3 * t_front + 0.2 * temps_surfaces  # Frente-Esq
-    data_export['Temp_Radiante_Regiao2_C'] = 0.5 * t_right + 0.3 * t_front + 0.2 * temps_surfaces  # Frente-Dir
-    data_export['Temp_Radiante_Regiao3_C'] = 0.5 * t_left + 0.5 * temps_surfaces  # Centro-Esq
-    data_export['Temp_Radiante_Regiao4_C'] = temps_surfaces  # Centro (média geral)
-    data_export['Temp_Radiante_Regiao5_C'] = 0.4 * t_back + 0.3 * t_left + 0.3 * temps_surfaces  # Fundo-Esq
-    data_export['Temp_Radiante_Regiao6_C'] = 0.5 * t_back + 0.3 * t_right + 0.2 * temps_surfaces  # Fundo-Dir
+    # Temperatura radiante ANTIGA (para cálculo interno)
+    temp_antiga_regiao1 = 0.5 * t_left + 0.3 * t_front + 0.2 * temps_surfaces  # Frente-Esq
+    temp_antiga_regiao2 = 0.5 * t_right + 0.3 * t_front + 0.2 * temps_surfaces  # Frente-Dir
+    temp_antiga_regiao3 = 0.5 * t_left + 0.5 * temps_surfaces  # Centro-Esq
+    temp_antiga_regiao4 = temps_surfaces  # Centro-Dir
+    temp_antiga_regiao5 = 0.4 * t_back + 0.3 * t_left + 0.3 * temps_surfaces  # Fundo-Esq
+    temp_antiga_regiao6 = 0.5 * t_back + 0.3 * t_right + 0.2 * temps_surfaces  # Fundo-Dir
     
-    print(f"✓ Temperaturas radiantes regionais calculadas (6 regiões)")
+    # REORDENAMENTO CONFORME NOVA ORDEM DOS SENSORES:
+    # Sensor 1: Fundo-esquerda (parede janela, debaixo AC) = Antiga Regiao5
+    # Sensor 2: Centro-esquerda (parede janela, meio) = Antiga Regiao3
+    # Sensor 3: Frente-esquerda (mesa professor) = Antiga Regiao1
+    # Sensor 4: Frente-direita (porta) = Antiga Regiao2
+    # Sensor 5: Centro-direita (meio parede porta) = Antiga Regiao4
+    # Sensor 6: Fundo-direita (fundo parede porta) = Antiga Regiao6
+    
+    data_export['Temp_Radiante_Sensor1_Fundo_Esq_C'] = temp_antiga_regiao5
+    data_export['Temp_Radiante_Sensor2_Centro_Esq_C'] = temp_antiga_regiao3
+    data_export['Temp_Radiante_Sensor3_Frente_Esq_C'] = temp_antiga_regiao1
+    data_export['Temp_Radiante_Sensor4_Frente_Dir_C'] = temp_antiga_regiao2
+    data_export['Temp_Radiante_Sensor5_Centro_Dir_C'] = temp_antiga_regiao4
+    data_export['Temp_Radiante_Sensor6_Fundo_Dir_C'] = temp_antiga_regiao6
+    
+    print(f"✓ Temperaturas radiantes regionais calculadas (6 sensores - ordem atualizada)")
 
 # 6. VELOCIDADE DO AR
 # EnergyPlus não simula velocidade do ar com IdealLoadsAirSystem
@@ -141,12 +156,12 @@ print(f"    - Para velocidades reais, seria necessário modelo CFD ou HVAC detal
 print(f"  • Temp. radiante regional: ESTIMADA por ponderação de superfícies adjacentes")
 print(f"  • Simulação base: sim_0001 (pode ser alterada no script)")
 
-print(f"\n📖 REGIÕES DO LABORATÓRIO:")
-print(f"  Região 1: Frente-Esquerda (próximo janela 1 + lousa)")
-print(f"  Região 2: Frente-Direita (próximo porta + lousa)")
-print(f"  Região 3: Centro-Esquerda (próximo janela 2)")
-print(f"  Região 4: Centro (meio da sala)")
-print(f"  Região 5: Fundo-Esquerda (próximo janelas 3,4 + ACs)")
-print(f"  Região 6: Fundo-Direita (próximo ACs)")
+print(f"\n📖 POSIÇÃO DOS SENSORES (ORDEM ATUALIZADA):")
+print(f"  Sensor 1: Fundo-Esquerda (parede janela, debaixo do AC)")
+print(f"  Sensor 2: Centro-Esquerda (parede janela, meio)")
+print(f"  Sensor 3: Frente-Esquerda (mesa do professor)")
+print(f"  Sensor 4: Frente-Direita (porta)")
+print(f"  Sensor 5: Centro-Direita (meio da parede da porta)")
+print(f"  Sensor 6: Fundo-Direita (fundo parede da porta)")
 
 print(f"\n{'='*80}\n")
